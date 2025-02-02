@@ -1,4 +1,4 @@
-function NavButton({ text, styles }) {
+const NavButton = ({ text, styles }) => {
   return (
     <button
       className={`${styles} hover:bg-gray-100 hover:cursor-pointer hover:rounded-2xl pr-2.5 pl-2.5 h-min`}
@@ -6,9 +6,9 @@ function NavButton({ text, styles }) {
       {text}
     </button>
   );
-}
+};
 
-function NavigationWrapper() {
+const NavigationWrapper = ({ children }) => {
   return (
     <div className="grid h-full grid-rows-[50px_1fr_50px]">
       <nav className="flex gap-5 p-2.5 bg-gray-200 items-center">
@@ -16,8 +16,7 @@ function NavigationWrapper() {
         <NavButton text="notifs" />
         <NavButton text="settings" />
       </nav>
-      <p>main</p>
-
+      <main>{children}</main>
       <nav className="flex gap-5 p-2.5 justify-center bg-gray-200 items-center">
         <NavButton text="home" />
         <NavButton text="new" />
@@ -25,6 +24,6 @@ function NavigationWrapper() {
       </nav>
     </div>
   );
-}
+};
 
 export default NavigationWrapper;
