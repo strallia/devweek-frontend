@@ -16,7 +16,7 @@ const NavigationWrapper = ({ children }) => {
         <NavButton text="notifs" />
         <NavButton text="settings" />
       </nav>
-      <main>{children}</main>
+      <main className="pt-2.5 pb-2.5 pr-5 pl-5">{children}</main>
       <nav className="flex gap-5 p-2.5 justify-center bg-gray-200 items-center">
         <NavButton text="home" />
         <NavButton text="new" />
