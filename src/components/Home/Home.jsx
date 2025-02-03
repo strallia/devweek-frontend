@@ -19,7 +19,7 @@ const events = [
 const groups = [
   {
     groupName: 'Group Name',
-    users: ['Sam Johnson', 'Josie Rein', 'Jane Doe'],
+    users: ['Sam Johnson', 'Josie Rein', 'Jane Doe', 'Sellie Nosh'],
     description: 'description',
   },
   {

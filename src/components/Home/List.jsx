@@ -1,19 +1,4 @@
-const Image = ({ url, size }) => {
-  const dimensions =
-    size === 'small' ? '30px' : size === 'med' ? '100px' : '300px';
-
-  return (
-    <div
-      className={`h-[${dimensions}] w-[${dimensions}] rounded-md overflow-hidden`}
-    >
-      {url ? (
-        <img src={url} />
-      ) : (
-        <div className="bg-gray-200 h-full w-full"></div>
-      )}
-    </div>
-  );
-};
+import Image from '../Image';
 
 const EventItem = ({ item }) => {
   const { eventImage, groupImage, groupName, eventName, date, location } = item;
@@ -35,12 +20,37 @@ const EventItem = ({ item }) => {
 };
 
 const GroupItem = ({ item }) => {
-  const { groupName, users, description } = item;
+  const { groupImage, groupName, users, description } = item;
+
+  const usersFirstLetter = users.map((user) => user.charAt(0));
+
+  const generateRandomPastelColor = () => {
+    const r = Math.floor(Math.random() * 128) + 127;
+    const g = Math.floor(Math.random() * 128) + 127;
+    const b = Math.floor(Math.random() * 128) + 127;
+    return `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
+  };
+
   return (
-    <div>
-      <p>{groupName}</p>
-      <p>{users.join(', ')}</p>
-      <p>{description}</p>
+    <div className="flex gap-2.5">
+      <Image url={groupImage} size="med" />
+      <div className="grid justify-between">
+        <div className="flex">
+          {users.map((user, index) => (
+            <Image
+              key={index}
+              url={user.image}
+              size="small"
+              borderRadius="circle"
+              containerStyles={{ transform: `translateX(${-40 * index}%)` }}
+              imageStyles={{ backgroundColor: generateRandomPastelColor() }}
+              imageText={usersFirstLetter[index]}
+            />
+          ))}
+        </div>
+        <p className="text-2xl">{groupName}</p>
+        <p className="text-xs">{description}</p>
+      </div>
     </div>
   );
 };
