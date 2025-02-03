@@ -7,13 +7,13 @@ const EventItem = ({ item }) => {
     <div className="flex gap-2.5">
       <Image url={eventImage} size="med" />
       <div>
-        <div className="flex gap-1.5">
+        <div className="flex gap-1.5 items-center">
           <Image url={groupImage} size="small" />
           {groupName}
         </div>
-        <p>{eventName}</p>
-        <p>{date.toString()}</p>
-        <p>{location}</p>
+        <p className="text-xl">{eventName}</p>
+        <p className="text-xs">{date.toString()}</p>
+        <p className="text-xs">{location}</p>
       </div>
     </div>
   );
