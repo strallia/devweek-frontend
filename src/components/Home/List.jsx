@@ -1,7 +1,10 @@
+import moment from 'moment';
 import Image from '../Image';
 
 const EventItem = ({ item }) => {
   const { eventImage, groupImage, groupName, eventName, date, location } = item;
+
+  const formattedDate = moment(date).format('MMM D, YYYY / h:mm a');
 
   return (
     <div className="flex gap-2.5">
@@ -12,7 +15,7 @@ const EventItem = ({ item }) => {
           {groupName}
         </div>
         <p className="text-xl">{eventName}</p>
-        <p className="text-xs">{date.toString()}</p>
+        <p className="text-xs">{formattedDate}</p>
         <p className="text-xs">{location}</p>
       </div>
     </div>
