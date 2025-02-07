@@ -1,5 +1,5 @@
 import moment from 'moment';
-import Image from '../Image';
+import Image from '@/components/Image';
 
 const EventItem = ({ item }) => {
   const { eventImage, groupImage, groupName, eventName, date, location } = item;

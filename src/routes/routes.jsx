@@ -1,5 +1,5 @@
-import ErrorPage from './ErrorPage';
-import Home from '../components/Home/Home';
+import ErrorPage from '../pages/Error/ErrorPage';
+import Home from '../pages/Home/Home';
 
 const routes = [
   {

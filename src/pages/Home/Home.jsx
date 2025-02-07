@@ -1,4 +1,4 @@
-import NavigationWrapper from './NavigationWrapper';
+import NavigationWrapper from '@/layouts/NavigationWrapper';
 import List from './List';
 
 const events = [

@@ -1,12 +1,12 @@
-import Bell from '@/assets/bell.svg';
-import User from '@/assets/user.svg';
-import Calendar from '@/assets/calendar.svg';
-import DollarSign from '@/assets/dollar-sign.svg';
-import Home from '@/assets/home.svg';
-import PlusSquare from '@/assets/plus-square.svg';
-import Users from '@/assets/users.svg';
-import Writing from '@/assets/writing.svg';
-import AddSubtract from '@/assets/add-subtract.svg';
+import Bell from '@/assets/icons/bell.svg';
+import User from '@/assets/icons/user.svg';
+import Calendar from '@/assets/icons/calendar.svg';
+import DollarSign from '@/assets/icons/dollar-sign.svg';
+import Home from '@/assets/icons/home.svg';
+import PlusSquare from '@/assets/icons/plus-square.svg';
+import Users from '@/assets/icons/users.svg';
+import Writing from '@/assets/icons/writing.svg';
+import AddSubtract from '@/assets/icons/add-subtract.svg';
 import { useState } from 'react';
 
 const NavButton = ({ image, imageAlt, styles, onClick, text }) => {
