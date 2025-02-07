@@ -1,19 +1,30 @@
 import moment from 'moment';
 import Image from '@/components/Image';
+import { useNavigate } from 'react-router-dom';
 
 const EventItem = ({ item }) => {
   const { eventImage, groupImage, groupName, eventName, date, location } = item;
+  const navigate = useNavigate();
 
   const formattedDate = moment(date).format('MMM D, YYYY / h:mm a');
 
+  const goToEventPage = () => {
+    navigate('/event');
+  };
+
+  const goToGroupPage = (e) => {
+    e.stopPropagation();
+    navigate('/group');
+  };
+
   return (
-    <div className="flex gap-2.5">
+    <div className="flex gap-2.5" onClick={goToEventPage}>
       <Image url={eventImage} size="med" />
       <div>
-        <div className="flex gap-1.5 items-center">
+        <button className="flex gap-1.5 items-center" onClick={goToGroupPage}>
           <Image url={groupImage} size="small" />
           {groupName}
-        </div>
+        </button>
         <p className="text-xl">{eventName}</p>
         <p className="text-xs">{formattedDate}</p>
         <p className="text-xs">{location}</p>
@@ -24,6 +35,7 @@ const EventItem = ({ item }) => {
 
 const GroupItem = ({ item }) => {
   const { groupImage, groupName, users, description } = item;
+  const navigate = useNavigate();
 
   const usersFirstLetter = users.map((user) => user.charAt(0));
 
@@ -34,8 +46,12 @@ const GroupItem = ({ item }) => {
     return `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
   };
 
+  const goToGroupPage = () => {
+    navigate('/group');
+  };
+
   return (
-    <div className="flex gap-2.5">
+    <div className="flex gap-2.5" onClick={goToGroupPage}>
       <Image url={groupImage} size="med" />
       <div className="grid justify-between">
         <div className="flex">
