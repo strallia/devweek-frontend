@@ -8,6 +8,9 @@ import Users from '@/assets/icons/users.svg';
 import Writing from '@/assets/icons/writing.svg';
 import AddSubtract from '@/assets/icons/add-subtract.svg';
 import { useState } from 'react';
+import AddExpense from '../components/AddExpense';
+import AddEvent from '../components/AddEvent';
+import AddGroup from '../components/AddGroup';
 
 const NavButton = ({ image, imageAlt, styles, onClick, text }) => {
   return (
@@ -23,9 +26,27 @@ const NavButton = ({ image, imageAlt, styles, onClick, text }) => {
 
 const NavigationWrapper = ({ children }) => {
   const [showCreateItemDropdown, setShowCreateItemDropdown] = useState(false);
+  const [showExpenseForm, setShowExpenseForm] = useState(false);
+  const [showEventForm, setShowEventForm] = useState(false);
+  const [showGroupForm, setShowGroupForm] = useState(false);
 
   const toggleCreateItemDropdown = () => {
     setShowCreateItemDropdown((prev) => !prev);
+  };
+
+  const toggleExpenseForm = () => {
+    toggleCreateItemDropdown();
+    setShowExpenseForm((prev) => !prev);
+  };
+
+  const toggleEventForm = () => {
+    toggleCreateItemDropdown();
+    setShowEventForm((prev) => !prev);
+  };
+
+  const toggleGroupForm = () => {
+    toggleCreateItemDropdown();
+    setShowGroupForm((prev) => !prev);
   };
 
   return (
@@ -45,18 +66,21 @@ const NavigationWrapper = ({ children }) => {
               imageAlt="add expense"
               text="Add Expense"
               styles="py-[12px] px-[16px]"
+              onClick={toggleExpenseForm}
             />
             <NavButton
               image={Calendar}
               imageAlt="create event"
               text="Create Event"
               styles="py-[12px] px-[16px]"
+              onClick={toggleEventForm}
             />
             <NavButton
               image={Users}
               imageAlt="create group"
               text="Create Group"
               styles="py-[12px] px-[16px]"
+              onClick={toggleGroupForm}
             />
           </div>
         ) : null}
@@ -67,6 +91,13 @@ const NavigationWrapper = ({ children }) => {
         <NavButton image={PlusSquare} imageAlt="new" />
         <NavButton image={DollarSign} imageAlt="expenses" />
       </nav>
+
+      <AddExpense
+        isVisible={showExpenseForm}
+        setIsVisible={setShowExpenseForm}
+      />
+      <AddEvent isVisible={showEventForm} setIsVisible={setShowEventForm} />
+      <AddGroup isVisible={showGroupForm} setIsVisible={setShowGroupForm} />
     </div>
   );
 };
