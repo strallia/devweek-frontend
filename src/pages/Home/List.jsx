@@ -1,6 +1,7 @@
 import moment from 'moment';
 import Image from '@/components/Image';
 import { useNavigate } from 'react-router-dom';
+import ProfileImage from '../../components/ProfileImage';
 
 const EventItem = ({ item }) => {
   const { eventImage, groupImage, groupName, eventName, date, location } = item;
@@ -39,13 +40,6 @@ const GroupItem = ({ item }) => {
 
   const usersFirstLetter = users.map((user) => user.charAt(0));
 
-  const generateRandomPastelColor = () => {
-    const r = Math.floor(Math.random() * 128) + 127;
-    const g = Math.floor(Math.random() * 128) + 127;
-    const b = Math.floor(Math.random() * 128) + 127;
-    return `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
-  };
-
   const goToGroupPage = () => {
     navigate('/group');
   };
@@ -56,15 +50,13 @@ const GroupItem = ({ item }) => {
       <div className="grid justify-between">
         <div className="flex">
           {users.map((user, index) => (
-            <Image
+            <div
               key={index}
-              url={user.image}
-              size="small"
-              borderRadius="circle"
-              containerStyles={{ transform: `translateX(${-40 * index}%)` }}
-              imageStyles={{ backgroundColor: generateRandomPastelColor() }}
-              imageText={usersFirstLetter[index]}
-            />
+              className="w-8 h-8"
+              style={{ transform: `translateX(${-40 * index}%)` }}
+            >
+              <ProfileImage image={user.image} text={usersFirstLetter[index]} />
+            </div>
           ))}
         </div>
         <p className="text-2xl">{groupName}</p>
