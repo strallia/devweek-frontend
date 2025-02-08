@@ -93,7 +93,7 @@ const NavigationWrapper = ({ children }) => {
           </div>
         ) : null}
       </nav>
-      <main className="pt-2.5 pb-2.5 pr-5 pl-5">{children}</main>
+      <main>{children}</main>
       <nav className="flex gap-5 p-2.5 justify-center border-t border-gray-300 items-center">
         <NavButton
           image={Home}

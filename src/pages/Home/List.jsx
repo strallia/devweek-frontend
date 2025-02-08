@@ -10,7 +10,7 @@ const EventItem = ({ item }) => {
   const navigate = useNavigate();
 
   const goToEventPage = () => {
-    navigate('/event');
+    navigate('/event', { state: item });
   };
 
   const goToGroupPage = (e) => {
@@ -19,6 +19,7 @@ const EventItem = ({ item }) => {
   };
 
   return (
+    <div className="flex gap-2.5 items-center" onClick={goToEventPage}>
       <div className="h-24 w-24 rounded-md overflow-hidden">
         {eventImage ? <Image url={eventImage} /> : <DefaultImage />}
       </div>
