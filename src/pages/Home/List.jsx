@@ -1,6 +1,7 @@
 import moment from 'moment';
 import Image from '@/components/Image';
 import { useNavigate } from 'react-router-dom';
+import GroupName from '../../components/GroupName';
 import DefaultImage from '../../components/DefaultImage';
 import ProfileImage from '../../components/ProfileImage';
 
@@ -24,10 +25,11 @@ const EventItem = ({ item }) => {
         {eventImage ? <Image url={eventImage} /> : <DefaultImage />}
       </div>
       <div>
-        <button className="flex gap-1.5 items-center" onClick={goToGroupPage}>
-          <Image url={groupImage} size="small" />
-          {groupName}
-        </button>
+        <GroupName
+          groupName={groupName}
+          image={groupImage}
+          onClick={goToGroupPage}
+        />
         <p className="text-xl">{eventName}</p>
         <p className="text-xs">{formattedDate}</p>
         <p className="text-xs">{location}</p>
