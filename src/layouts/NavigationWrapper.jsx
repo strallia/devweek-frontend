@@ -13,10 +13,17 @@ import AddEvent from '../components/AddEvent';
 import AddGroup from '../components/AddGroup';
 import { useLocation, useNavigate } from 'react-router-dom';
 
-const NavButton = ({ image, imageAlt, styles, onClick, text }) => {
+const NavButton = ({
+  image,
+  imageAlt,
+  styles,
+  onClick,
+  text,
+  isHorizontal,
+}) => {
   return (
     <button
-      className={`hover:bg-gray-100 hover:cursor-pointer hover:rounded-2xl px-2.5 h-min grid justify-items-center ${styles}`}
+      className={`hover:bg-gray-100 hover:cursor-pointer hover:rounded-2xl px-2.5 h-min justify-items-center gap-2 ${styles} ${isHorizontal ? 'flex' : 'grid'}`}
       onClick={onClick}
     >
       <img src={image} alt={imageAlt} />
@@ -75,6 +82,7 @@ const NavigationWrapper = ({ children }) => {
               text="Add Expense"
               styles="py-[12px] px-[16px]"
               onClick={toggleExpenseForm}
+              isHorizontal={true}
             />
             <NavButton
               image={CalendarLarge}
@@ -82,6 +90,7 @@ const NavigationWrapper = ({ children }) => {
               text="Create Event"
               styles="py-[12px] px-[16px]"
               onClick={toggleEventForm}
+              isHorizontal={true}
             />
             <NavButton
               image={Users}
@@ -89,6 +98,7 @@ const NavigationWrapper = ({ children }) => {
               text="Create Group"
               styles="py-[12px] px-[16px]"
               onClick={toggleGroupForm}
+              isHorizontal={true}
             />
           </div>
         ) : null}
