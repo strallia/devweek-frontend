@@ -1,9 +1,9 @@
 import Bell from '@/assets/icons/bell.svg';
 import User from '@/assets/icons/user.svg';
 import Calendar from '@/assets/icons/calendar.svg';
-import DollarSign from '@/assets/icons/dollar-sign.svg';
+import ChatBubbles from '@/assets/icons/chat-bubbles.svg';
 import Home from '@/assets/icons/home.svg';
-import PlusSquare from '@/assets/icons/plus-square.svg';
+import Wallet from '@/assets/icons/wallet.svg';
 import Users from '@/assets/icons/users.svg';
 import Writing from '@/assets/icons/writing.svg';
 import AddSubtract from '@/assets/icons/add-subtract.svg';
@@ -16,7 +16,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 const NavButton = ({ image, imageAlt, styles, onClick, text }) => {
   return (
     <button
-      className={`hover:bg-gray-100 hover:cursor-pointer hover:rounded-2xl px-2.5 h-min flex justify-center ${styles}`}
+      className={`hover:bg-gray-100 hover:cursor-pointer hover:rounded-2xl px-2.5 h-min grid justify-items-center ${styles}`}
       onClick={onClick}
     >
       <img src={image} alt={imageAlt} />
@@ -58,8 +58,8 @@ const NavigationWrapper = ({ children }) => {
   };
 
   return (
-    <div className="grid h-full grid-rows-[50px_1fr_50px]">
-      <nav className="flex gap-5 p-2.5 bg-gray-200 items-center relative">
+    <div className="grid h-full grid-rows-[60px_1fr_80px]">
+      <nav className="flex gap-5 p-2.5 border-b border-gray-300 items-center relative">
         <NavButton image={User} imageAlt="profile" styles="mr-auto" />
         <NavButton image={Bell} imageAlt="reminders" />
         <NavButton
@@ -94,16 +94,23 @@ const NavigationWrapper = ({ children }) => {
         ) : null}
       </nav>
       <main className="pt-2.5 pb-2.5 pr-5 pl-5">{children}</main>
-      <nav className="flex gap-5 p-2.5 justify-center bg-gray-200 items-center">
-        <NavButton image={Home} imageAlt="home" onClick={() => goToPage('/')} />
+      <nav className="flex gap-5 p-2.5 justify-center border-t border-gray-300 items-center">
         <NavButton
-          image={PlusSquare}
-          imageAlt="new"
+          image={Home}
+          imageAlt="home"
+          text="Home"
+          onClick={() => goToPage('/')}
+        />
+        <NavButton
+          image={Wallet}
+          imageAlt="wallet"
+          text="Wallet"
           onClick={() => goToPage('/expenses')}
         />
         <NavButton
-          image={DollarSign}
-          imageAlt="expenses"
+          image={ChatBubbles}
+          imageAlt="chat"
+          text="Chat"
           onClick={() => goToPage('/chats')}
         />
       </nav>
