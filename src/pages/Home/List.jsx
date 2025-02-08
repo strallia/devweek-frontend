@@ -77,7 +77,7 @@ const GroupItem = ({ item }) => {
 const List = ({ title, items, type }) => {
   return (
     <div>
-      <h1 className="font-bold">{title}</h1>
+      <h1 className="font-bold border-b border-gray-300 p-2">{title}</h1>
       <ul>
         {items.map((item, index) => {
           return (
