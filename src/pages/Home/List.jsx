@@ -1,6 +1,7 @@
 import moment from 'moment';
 import Image from '@/components/Image';
 import { useNavigate } from 'react-router-dom';
+import DefaultImage from '../../components/DefaultImage';
 import ProfileImage from '../../components/ProfileImage';
 
 const EventItem = ({ item }) => {
@@ -19,8 +20,9 @@ const EventItem = ({ item }) => {
   };
 
   return (
-    <div className="flex gap-2.5" onClick={goToEventPage}>
-      <Image url={eventImage} size="med" />
+      <div className="h-24 w-24 rounded-md overflow-hidden">
+        {eventImage ? <Image url={eventImage} /> : <DefaultImage />}
+      </div>
       <div>
         <button className="flex gap-1.5 items-center" onClick={goToGroupPage}>
           <Image url={groupImage} size="small" />
@@ -46,7 +48,9 @@ const GroupItem = ({ item }) => {
 
   return (
     <div className="flex gap-2.5" onClick={goToGroupPage}>
-      <Image url={groupImage} size="med" />
+      <div className="h-24 w-24 rounded-md overflow-hidden">
+        {groupImage ? <Image url={groupImage} /> : <DefaultImage />}
+      </div>
       <div className="grid justify-between">
         <div className="flex">
           {users.map((user, index) => (
