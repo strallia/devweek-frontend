@@ -11,6 +11,7 @@ import { useState } from 'react';
 import AddExpense from '../components/AddExpense';
 import AddEvent from '../components/AddEvent';
 import AddGroup from '../components/AddGroup';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const NavButton = ({ image, imageAlt, styles, onClick, text }) => {
   return (
@@ -25,6 +26,8 @@ const NavButton = ({ image, imageAlt, styles, onClick, text }) => {
 };
 
 const NavigationWrapper = ({ children }) => {
+  const navigate = useNavigate();
+  const location = useLocation();
   const [showCreateItemDropdown, setShowCreateItemDropdown] = useState(false);
   const [showExpenseForm, setShowExpenseForm] = useState(false);
   const [showEventForm, setShowEventForm] = useState(false);
@@ -47,6 +50,11 @@ const NavigationWrapper = ({ children }) => {
   const toggleGroupForm = () => {
     toggleCreateItemDropdown();
     setShowGroupForm((prev) => !prev);
+  };
+
+  const goToPage = (route) => {
+    if (location.pathname === route) return;
+    navigate(route);
   };
 
   return (
@@ -87,9 +95,17 @@ const NavigationWrapper = ({ children }) => {
       </nav>
       <main className="pt-2.5 pb-2.5 pr-5 pl-5">{children}</main>
       <nav className="flex gap-5 p-2.5 justify-center bg-gray-200 items-center">
-        <NavButton image={Home} imageAlt="home" />
-        <NavButton image={PlusSquare} imageAlt="new" />
-        <NavButton image={DollarSign} imageAlt="expenses" />
+        <NavButton image={Home} imageAlt="home" onClick={() => goToPage('/')} />
+        <NavButton
+          image={PlusSquare}
+          imageAlt="new"
+          onClick={() => goToPage('/expenses')}
+        />
+        <NavButton
+          image={DollarSign}
+          imageAlt="expenses"
+          onClick={() => goToPage('/chats')}
+        />
       </nav>
 
       <AddExpense
