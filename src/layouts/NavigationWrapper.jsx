@@ -1,6 +1,6 @@
 import Bell from '@/assets/icons/bell.svg';
 import User from '@/assets/icons/user.svg';
-import Calendar from '@/assets/icons/calendar.svg';
+import CalendarLarge from '@/assets/icons/calendar-lg.svg';
 import ChatBubbles from '@/assets/icons/chat-bubbles.svg';
 import Home from '@/assets/icons/home.svg';
 import Wallet from '@/assets/icons/wallet.svg';
@@ -77,7 +77,7 @@ const NavigationWrapper = ({ children }) => {
               onClick={toggleExpenseForm}
             />
             <NavButton
-              image={Calendar}
+              image={CalendarLarge}
               imageAlt="create event"
               text="Create Event"
               styles="py-[12px] px-[16px]"

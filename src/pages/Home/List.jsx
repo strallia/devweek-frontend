@@ -1,6 +1,6 @@
-import moment from 'moment';
 import Image from '@/components/Image';
 import { useNavigate } from 'react-router-dom';
+import DateTime from '../../components/DateTime';
 import GroupName from '../../components/GroupName';
 import DefaultImage from '../../components/DefaultImage';
 import ProfileImage from '../../components/ProfileImage';
@@ -8,8 +8,6 @@ import ProfileImage from '../../components/ProfileImage';
 const EventItem = ({ item }) => {
   const { eventImage, groupImage, groupName, eventName, date, location } = item;
   const navigate = useNavigate();
-
-  const formattedDate = moment(date).format('MMM D, YYYY / h:mm a');
 
   const goToEventPage = () => {
     navigate('/event');
@@ -31,7 +29,7 @@ const EventItem = ({ item }) => {
           onClick={goToGroupPage}
         />
         <p className="text-xl">{eventName}</p>
-        <p className="text-xs">{formattedDate}</p>
+        <DateTime date={date} />
         <p className="text-xs">{location}</p>
       </div>
     </div>
