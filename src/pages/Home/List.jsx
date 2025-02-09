@@ -21,7 +21,7 @@ const EventItem = ({ item }) => {
   return (
     <div className="flex gap-2.5 items-center" onClick={goToEventPage}>
       <div className="h-24 w-24 rounded-md overflow-hidden">
-        {eventImage ? <Image url={eventImage} /> : <DefaultImage />}
+        <Image url={eventImage} tailwindHeight="h-24" />
       </div>
       <div>
         <GroupName
@@ -44,7 +44,7 @@ const GroupItem = ({ item }) => {
   const usersFirstLetter = users.map((user) => user.charAt(0));
 
   const goToGroupPage = () => {
-    navigate('/group');
+    navigate('/group', { state: item });
   };
 
   return (
@@ -78,7 +78,7 @@ const List = ({ title, items, type }) => {
       <ul>
         {items.map((item, index) => {
           return (
-            <li key={index} className="bg-red p-3">
+            <li key={index} className="p-3">
               {type === 'events' ? (
                 <EventItem item={item} />
               ) : (
