@@ -8,7 +8,7 @@ const IconButton = ({
 }) => {
   return (
     <button
-      className={`hover:bg-gray-100 hover:cursor-pointer px-2.5 justify-items-center items-center
+      className={`hover:bg-gray-100 cursor-pointer px-2.5 justify-items-center items-center
         ${tailwindStyles} ${isHorizontal ? 'flex' : 'grid'}
       `}
       onClick={onClick}

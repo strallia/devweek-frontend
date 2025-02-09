@@ -19,7 +19,10 @@ const EventItem = ({ item }) => {
   };
 
   return (
-    <div className="flex gap-2.5 items-center" onClick={goToEventPage}>
+    <div
+      className="flex gap-2.5 items-center cursor-pointer"
+      onClick={goToEventPage}
+    >
       <div className="h-24 w-24 rounded-md overflow-hidden">
         <Image url={eventImage} tailwindHeight="h-24" />
       </div>
@@ -48,7 +51,7 @@ const GroupItem = ({ item }) => {
   };
 
   return (
-    <div className="flex gap-2.5" onClick={goToGroupPage}>
+    <div className="flex gap-2.5 cursor-pointer" onClick={goToGroupPage}>
       <div className="h-24 w-24 rounded-md overflow-hidden">
         {groupImage ? <Image url={groupImage} /> : <DefaultImage />}
       </div>
