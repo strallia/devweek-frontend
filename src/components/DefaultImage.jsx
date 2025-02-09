@@ -6,7 +6,7 @@ const DefaultImage = ({ iconWidth }) => {
 
   return (
     <div className="bg-[#EAF2FF] flex content-center justify-center h-full">
-      <img src={DefaultIcon} className={`${iconWidthClass}`} />
+      <img src={DefaultIcon} className={`${iconWidthClass}`} alt="" />
     </div>
   );
 };

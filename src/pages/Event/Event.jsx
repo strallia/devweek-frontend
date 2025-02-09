@@ -1,7 +1,6 @@
 import DateTime from '../../components/DateTime';
 import { useLocation } from 'react-router-dom';
 import GroupName from '../../components/GroupName';
-import DefaultImage from '../../components/DefaultImage';
 import ProfileImage from '../../components/ProfileImage';
 import PersonPlus from '@/assets/icons/person-plus.svg';
 import MapPin from '@/assets/icons/map-pin.svg';
@@ -9,6 +8,7 @@ import IconButton from '../../components/IconButton';
 import ChatBubble from '@/assets/icons/chat-bubble.svg';
 import Wallet from '@/assets/icons/wallet.svg';
 import ScrollableWrapper from '../../layouts/ScrollableWrapper';
+import Image from '../../components/Image';
 
 const Event = () => {
   const { state } = useLocation();
@@ -22,9 +22,7 @@ const Event = () => {
   return (
     <>
       <section className="relative">
-        <div className="h-60">
-          <DefaultImage />
-        </div>
+        <Image url={image} tailwindHeight="h-52" />
         <div className="absolute bottom-0 flex justify-between w-full px-3 pb-3">
           <div className="grid gap-1.5">
             <h1 className="font-bold text-2xl">{eventName}</h1>
@@ -33,7 +31,7 @@ const Event = () => {
           <DateTime date={date} containerStyles="mt-auto" />
         </div>
       </section>
-      <ScrollableWrapper height="calc(100vh - 60px - 240px - 80px)">
+      <ScrollableWrapper height="calc(100vh - 60px - 208px - 80px)">
         <section className="grid gap-3 py-2.5 px-5">
           <div className="flex justify-between">
             <div className="grid grid-rows-[auto_auto] grid-cols-[1fr_auto]">
