@@ -5,7 +5,7 @@ export const events = [
     date: new Date(),
     location: 'The Embarcadero, San Francisco, CA, 94133',
     image: '',
-    members: ['Sam Johnson', 'Josie Rein', 'Jane Doe', 'Sellie Nosh'],
+    users: ['Sam Johnson', 'Josie Rein', 'Jane Doe', 'Sellie Nosh'],
     description: 'description',
   },
   {
@@ -14,7 +14,7 @@ export const events = [
     date: new Date(),
     location: 'The Embarcadero, San Francisco, CA, 94133',
     image: '',
-    members: ['Sam Johnson', 'Josie Rein', 'Jane Doe', 'Sellie Nosh'],
+    users: ['Sam Johnson', 'Josie Rein', 'Jane Doe', 'Sellie Nosh'],
     description: 'description',
   },
 ];

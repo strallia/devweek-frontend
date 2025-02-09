@@ -11,26 +11,8 @@ import { useState } from 'react';
 import AddExpense from '../components/AddExpense';
 import AddEvent from '../components/AddEvent';
 import AddGroup from '../components/AddGroup';
+import IconButton from '../components/IconButton';
 import { useLocation, useNavigate } from 'react-router-dom';
-
-const NavButton = ({
-  image,
-  imageAlt,
-  styles,
-  onClick,
-  text,
-  isHorizontal,
-}) => {
-  return (
-    <button
-      className={`hover:bg-gray-100 hover:cursor-pointer hover:rounded-2xl px-2.5 h-min justify-items-center gap-2 ${styles} ${isHorizontal ? 'flex' : 'grid'}`}
-      onClick={onClick}
-    >
-      <img src={image} alt={imageAlt} />
-      {text}
-    </button>
-  );
-};
 
 const NavigationWrapper = ({ children }) => {
   const navigate = useNavigate();
@@ -67,36 +49,36 @@ const NavigationWrapper = ({ children }) => {
   return (
     <div className="grid h-full grid-rows-[60px_1fr_80px]">
       <nav className="flex gap-5 p-2.5 border-b border-gray-300 items-center relative">
-        <NavButton image={User} imageAlt="profile" styles="mr-auto" />
-        <NavButton image={Bell} imageAlt="reminders" />
-        <NavButton
+        <IconButton image={User} imageAlt="profile" tailwindStyles="mr-auto" />
+        <IconButton image={Bell} imageAlt="reminders" />
+        <IconButton
           image={Writing}
           imageAlt="create expense, event, or group"
           onClick={toggleCreateItemDropdown}
         />
         {showCreateItemDropdown ? (
           <div className="absolute right-3 top-[120%] grid gap-1">
-            <NavButton
+            <IconButton
               image={AddSubtract}
               imageAlt="add expense"
               text="Add Expense"
-              styles="py-[12px] px-[16px]"
+              tailwindStyles="py-[12px] px-[16px]"
               onClick={toggleExpenseForm}
               isHorizontal={true}
             />
-            <NavButton
+            <IconButton
               image={CalendarLarge}
               imageAlt="create event"
               text="Create Event"
-              styles="py-[12px] px-[16px]"
+              tailwindStyles="py-[12px] px-[16px]"
               onClick={toggleEventForm}
               isHorizontal={true}
             />
-            <NavButton
+            <IconButton
               image={Users}
               imageAlt="create group"
               text="Create Group"
-              styles="py-[12px] px-[16px]"
+              tailwindStyles="py-[12px] px-[16px]"
               onClick={toggleGroupForm}
               isHorizontal={true}
             />
@@ -105,19 +87,19 @@ const NavigationWrapper = ({ children }) => {
       </nav>
       <main>{children}</main>
       <nav className="flex gap-5 p-2.5 justify-center border-t border-gray-300 items-center">
-        <NavButton
+        <IconButton
           image={Home}
           imageAlt="home"
           text="Home"
           onClick={() => goToPage('/')}
         />
-        <NavButton
+        <IconButton
           image={Wallet}
           imageAlt="wallet"
           text="Wallet"
           onClick={() => goToPage('/expenses')}
         />
-        <NavButton
+        <IconButton
           image={ChatBubbles}
           imageAlt="chat"
           text="Chat"
