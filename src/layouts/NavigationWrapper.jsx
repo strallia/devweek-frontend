@@ -12,9 +12,9 @@ import AddExpense from '../components/AddExpense';
 import AddEvent from '../components/AddEvent';
 import AddGroup from '../components/AddGroup';
 import IconButton from '../components/IconButton';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 
-const NavigationWrapper = ({ children }) => {
+const NavigationWrapper = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [showCreateItemDropdown, setShowCreateItemDropdown] = useState(false);
@@ -85,7 +85,9 @@ const NavigationWrapper = ({ children }) => {
           </div>
         ) : null}
       </nav>
-      <main>{children}</main>
+      <main>
+        <Outlet />
+      </main>
       <nav className="flex gap-5 p-2.5 justify-center border-t border-gray-300 items-center">
         <IconButton
           image={Home}

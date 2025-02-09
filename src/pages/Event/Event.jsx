@@ -1,4 +1,3 @@
-import NavigationWrapper from '../../layouts/NavigationWrapper';
 import DateTime from '../../components/DateTime';
 import { useLocation } from 'react-router-dom';
 import GroupName from '../../components/GroupName';
@@ -20,7 +19,7 @@ const Event = () => {
   };
 
   return (
-    <NavigationWrapper>
+    <>
       <section className="relative">
         <div className="h-60">
           <DefaultImage />
@@ -82,7 +81,7 @@ const Event = () => {
           <p className="text-sm">{description}</p>
         </div>
       </section>
-    </NavigationWrapper>
+    </>
   );
 };
 
