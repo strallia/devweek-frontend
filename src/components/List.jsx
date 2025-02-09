@@ -1,9 +1,9 @@
 import Image from '@/components/Image';
 import { useNavigate } from 'react-router-dom';
-import DateTime from '../../components/DateTime';
-import GroupName from '../../components/GroupName';
-import DefaultImage from '../../components/DefaultImage';
-import ProfileImage from '../../components/ProfileImage';
+import DateTime from './DateTime';
+import GroupName from './GroupName';
+import DefaultImage from './DefaultImage';
+import ProfileImage from './ProfileImage';
 
 const EventItem = ({ item }) => {
   const { eventImage, groupImage, groupName, eventName, date, location } = item;

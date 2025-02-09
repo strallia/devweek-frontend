@@ -1,14 +1,14 @@
-import DateTime from '../../components/DateTime';
+import DateTime from '../components/DateTime';
 import { useLocation } from 'react-router-dom';
-import GroupName from '../../components/GroupName';
-import ProfileImage from '../../components/ProfileImage';
+import GroupName from '../components/GroupName';
+import ProfileImage from '../components/ProfileImage';
 import PersonPlus from '@/assets/icons/person-plus.svg';
 import MapPin from '@/assets/icons/map-pin.svg';
-import IconButton from '../../components/IconButton';
+import IconButton from '../components/IconButton';
 import ChatBubble from '@/assets/icons/chat-bubble.svg';
 import Wallet from '@/assets/icons/wallet.svg';
-import ScrollableWrapper from '../../layouts/ScrollableWrapper';
-import Image from '../../components/Image';
+import ScrollableWrapper from '../layouts/ScrollableWrapper';
+import Image from '../components/Image';
 
 const Event = () => {
   const { state } = useLocation();

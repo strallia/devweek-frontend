@@ -1,10 +1,10 @@
 import { useLocation } from 'react-router-dom';
-import IconButton from '../../components/IconButton';
-import Image from '../../components/Image';
+import IconButton from '../components/IconButton';
+import Image from '../components/Image';
 import Plus from '@/assets/icons/plus.svg';
-import ProfileImage from '../../components/ProfileImage';
-import ScrollableWrapper from '../../layouts/ScrollableWrapper';
-import List from '../Home/List';
+import ProfileImage from '../components/ProfileImage';
+import ScrollableWrapper from '../layouts/ScrollableWrapper';
+import List from '../components/List';
 
 const Group = () => {
   const { state } = useLocation();

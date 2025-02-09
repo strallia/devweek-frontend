@@ -1,12 +1,12 @@
 import NavigationWrapper from '../layouts/NavigationWrapper';
-import Chat from '../pages/Chat/Chat';
-import Chats from '../pages/Chats/Chats';
-import ErrorPage from '../pages/Error/ErrorPage';
-import Event from '../pages/Event/Event';
-import EventExpense from '../pages/EventExpense/EventExpense';
-import Expenses from '../pages/Expenses/Expenses';
-import Group from '../pages/Group/Group';
-import Home from '../pages/Home/Home';
+import Chat from '../pages/Chat';
+import Chats from '../pages/Chats';
+import ErrorPage from '../pages/ErrorPage';
+import Event from '../pages/Event';
+import EventExpense from '../pages/EventExpense';
+import Expenses from '../pages/Expenses';
+import Group from '../pages/Group';
+import Home from '../pages/Home';
 
 const routes = [
   {

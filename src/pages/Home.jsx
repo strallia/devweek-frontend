@@ -1,5 +1,5 @@
-import ScrollableWrapper from '../../layouts/ScrollableWrapper';
-import List from './List';
+import ScrollableWrapper from '../layouts/ScrollableWrapper';
+import List from '../components/List';
 import { events, groups } from '@/utils/mockData';
 
 function Home() {
