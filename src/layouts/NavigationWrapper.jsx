@@ -57,7 +57,7 @@ const NavigationWrapper = ({ children }) => {
           onClick={toggleCreateItemDropdown}
         />
         {showCreateItemDropdown ? (
-          <div className="absolute right-3 top-[120%] grid gap-1">
+          <div className="absolute right-3 top-[120%] grid gap-1 z-1">
             <IconButton
               image={AddSubtract}
               imageAlt="add expense"
