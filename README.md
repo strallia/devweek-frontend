@@ -18,7 +18,11 @@ React + Vite frontend styled with Tailwind CSS.
    ```
    npm install
    ```
-1. Run Development Server
+1. Setup the Backend Server
+
+   Follow the README at https://github.com/strallia/devweek-backend
+
+1. Run the Frontend
    ```
    npm run dev
    ```
