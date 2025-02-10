@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import ScrollableWrapper from '../layouts/ScrollableWrapper';
 import ProfileImage from '../components/ProfileImage';
@@ -14,21 +14,32 @@ const AddExpense = () => {
   const [splitWith, setSplitWith] = useState([]);
   const [splitAmounts, setSplitAmounts] = useState({});
 
-  // Function to reset form fields when the event changes.
+  // Reset form fields when the event changes.
+  // Sets paidBy to the first user (if any) and also initializes splitWith with that user.
   const resetFormFields = (newEvent) => {
-    setExpenseCost(''); 
-    setSplitMethod('equally'); 
-    setPaidBy(newEvent?.users[0] || null); 
-    setSplitWith([]); 
-    setSplitAmounts({}); 
+    setExpenseCost('');
+    setSplitMethod('equally');
+    const defaultPaidBy = newEvent?.users[0] || null;
+    setPaidBy(defaultPaidBy);
+    setSplitWith(defaultPaidBy ? [defaultPaidBy] : []);
+    setSplitAmounts({});
   };
 
+  // When paidBy changes, automatically add that user to splitWith if missing.
+  useEffect(() => {
+    if (paidBy && !splitWith.includes(paidBy)) {
+      setSplitWith((prev) => [...prev, paidBy]);
+    }
+  }, [paidBy, splitWith]);
+
   // Toggle selection for "Split With" users.
+  // If the user is currently the paidBy, we do nothing.
   const handleSplitWithToggle = (userName) => {
+    if (userName === paidBy) return; // lock out the current paidBy
     if (splitWith.includes(userName)) {
       // Remove the user and clear their split amount.
-      setSplitWith(splitWith.filter(u => u !== userName));
-      setSplitAmounts(prev => {
+      setSplitWith(splitWith.filter((u) => u !== userName));
+      setSplitAmounts((prev) => {
         const newAmounts = { ...prev };
         delete newAmounts[userName];
         return newAmounts;
@@ -107,7 +118,18 @@ const AddExpense = () => {
               <div className="flex gap-3 justify-start">
                 {selectedEvent.users.map((user) => (
                   <div key={user} className="relative">
-                    <button type="button" onClick={() => setPaidBy(user)}>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        // If this user is already the paidBy, do nothing.
+                        if (paidBy === user) return;
+                        setPaidBy(user);
+                        // Ensure the new paidBy is in splitWith.
+                        if (!splitWith.includes(user)) {
+                          setSplitWith((prev) => [...prev, user]);
+                        }
+                      }}
+                    >
                       <div className="w-8 h-8">
                         <ProfileImage
                           text={user.charAt(0)}
@@ -168,13 +190,18 @@ const AddExpense = () => {
               <div className="flex flex-wrap gap-3">
                 {selectedEvent.users.map((user) => (
                   <div key={user} className="relative">
-                    <button type="button" onClick={() => handleSplitWithToggle(user)}>
+                    <button
+                      type="button"
+                      onClick={() => handleSplitWithToggle(user)}
+                    >
                       <div className="w-8 h-8">
                         <ProfileImage
                           text={user.charAt(0)}
                           className={`w-full h-full rounded-full cursor-pointer transition-all ${
                             splitWith.includes(user)
-                              ? 'ring-2 ring-green-500 scale-110 bg-green-100'
+                              ? user === paidBy
+                                ? 'ring-2 ring-blue-500 scale-110 bg-blue-100'
+                                : 'ring-2 ring-green-500 scale-110 bg-green-100'
                               : 'opacity-50 hover:opacity-75'
                           }`}
                         />
@@ -182,7 +209,11 @@ const AddExpense = () => {
                     </button>
                     {splitWith.includes(user) && (
                       <div className="absolute -top-1 -right-1 w-4 h-4 bg-green-500 rounded-full flex items-center justify-center">
-                        <svg className="w-2 h-2 text-white" fill="currentColor" viewBox="0 0 20 20">
+                        <svg
+                          className="w-2 h-2 text-white"
+                          fill="currentColor"
+                          viewBox="0 0 20 20"
+                        >
                           <path d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" />
                         </svg>
                       </div>
