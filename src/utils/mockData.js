@@ -1,7 +1,7 @@
 export const events = [
   {
     groupName: 'Group Name',
-    eventName: 'Event Name',
+    eventName: 'Biking',
     date: new Date(),
     location: 'The Embarcadero, San Francisco, CA, 94133',
     image: '',
@@ -14,11 +14,11 @@ export const events = [
   },
   {
     groupName: 'Group Name',
-    eventName: 'Event Name',
+    eventName: 'Hiking',
     date: new Date(),
     location: 'The Embarcadero, San Francisco, CA, 94133',
     image: '',
-    users: ['Sam Johnson', 'Josie Rein', 'Jane Doe', 'Sellie Nosh'],
+    users: ['Emily Wilson', 'Maxwell Lee', 'Ava Morales', 'Liam Chen'],
     description: 'description',
   },
 ];
