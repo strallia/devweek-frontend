@@ -14,6 +14,15 @@ const AddExpense = () => {
   const [splitWith, setSplitWith] = useState([]);
   const [splitAmounts, setSplitAmounts] = useState({});
 
+  // Function to reset form fields when the event changes.
+  const resetFormFields = (newEvent) => {
+    setExpenseCost(''); 
+    setSplitMethod('equally'); 
+    setPaidBy(newEvent?.users[0] || null); 
+    setSplitWith([]); 
+    setSplitAmounts({}); 
+  };
+
   // Toggle selection for "Split With" users.
   const handleSplitWithToggle = (userName) => {
     if (splitWith.includes(userName)) {
@@ -38,7 +47,7 @@ const AddExpense = () => {
       paidBy,
       splitMethod,
       splitWith,
-      splitAmounts
+      splitAmounts,
     });
   };
 
@@ -59,11 +68,11 @@ const AddExpense = () => {
               value={selectedEvent?.eventName || ''}
               onChange={(e) => {
                 const selected = events.find(
-                  event => event.eventName === e.target.value
+                  (event) => event.eventName === e.target.value
                 );
                 setSelectedEvent(selected);
-                // Set default "Paid By" to the first user (if available)
-                setPaidBy(selected?.users[0] || null);
+                // Reset the form fields after selecting a new event.
+                resetFormFields(selected);
               }}
               className="w-full p-2.5 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
