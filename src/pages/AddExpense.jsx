@@ -10,11 +10,11 @@ const AddExpense = () => {
   const [expenseCost, setExpenseCost] = useState('');
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [paidBy, setPaidBy] = useState(null);
-  const [splitMethod, setSplitMethod] = useState('equally');
+  const [splitMethod, setSplitMethod] = useState('equally'); // 'equally', 'exact', or '%'
   const [splitWith, setSplitWith] = useState([]);
   const [splitAmounts, setSplitAmounts] = useState({});
 
-  // Reset form fields when the event changes.
+  // Reset form fields when a new event is chosen.
   // Sets paidBy to the first user (if any) and also initializes splitWith with that user.
   const resetFormFields = (newEvent) => {
     setExpenseCost('');
@@ -25,19 +25,86 @@ const AddExpense = () => {
     setSplitAmounts({});
   };
 
-  // When paidBy changes, automatically add that user to splitWith if missing.
+  // Always ensure that the user selected as "paidBy" is in the "splitWith" list.
   useEffect(() => {
     if (paidBy && !splitWith.includes(paidBy)) {
       setSplitWith((prev) => [...prev, paidBy]);
     }
   }, [paidBy, splitWith]);
 
+  // When expenseCost, splitMethod, or splitWith changes, update default split amounts.
+  useEffect(() => {
+    if (!expenseCost) return;
+    if (splitMethod === 'equally') {
+      const costValue = parseFloat(expenseCost) || 0;
+      const defaultAmount =
+        splitWith.length > 0 ? (costValue / splitWith.length).toFixed(2) : '0';
+      const newAmounts = {};
+      splitWith.forEach((user) => {
+        newAmounts[user] = defaultAmount;
+      });
+      setSplitAmounts(newAmounts);
+    } else if (splitMethod === '%') {
+      // Use toFixed(0) so that 25 is shown instead of 25.00.
+      const defaultPercent =
+        splitWith.length > 0 ? (100 / splitWith.length).toFixed(0) : '0';
+      const newAmounts = {};
+      splitWith.forEach((user) => {
+        newAmounts[user] = defaultPercent;
+      });
+      setSplitAmounts(newAmounts);
+    }
+  }, [expenseCost, splitWith, splitMethod]);
+
+  // For "exact" method, clear any changes (default to empty fields) when the method changes.
+  useEffect(() => {
+    if (splitMethod === 'exact') {
+      const newAmounts = {};
+      splitWith.forEach((user) => {
+        newAmounts[user] = '';
+      });
+      setSplitAmounts(newAmounts);
+    }
+  }, [splitMethod, splitWith]);
+
+  // For "exact" and "%" modes, ensure that entered values don’t make the total exceed:
+  // - The total cost (for "exact")
+  // - 100 (for "%")
+  const handleSplitAmountChange = (user, newValue) => {
+    // Allow empty value (user clearing the field)
+    if (newValue === '') {
+      setSplitAmounts((prev) => ({ ...prev, [user]: newValue }));
+      return;
+    }
+    const parsedValue = parseFloat(newValue);
+    if (splitMethod === 'exact') {
+      const costValue = parseFloat(expenseCost) || 0;
+      if (parsedValue > costValue) return; // individual value must not exceed total cost
+      let total = parsedValue;
+      splitWith.forEach((u) => {
+        if (u !== user) {
+          total += parseFloat(splitAmounts[u]) || 0;
+        }
+      });
+      if (total > costValue) return;
+    } else if (splitMethod === '%') {
+      if (parsedValue > 100) return; // individual value must not exceed 100%
+      let total = parsedValue;
+      splitWith.forEach((u) => {
+        if (u !== user) {
+          total += parseFloat(splitAmounts[u]) || 0;
+        }
+      });
+      if (total > 100) return;
+    }
+    setSplitAmounts((prev) => ({ ...prev, [user]: newValue }));
+  };
+
   // Toggle selection for "Split With" users.
-  // If the user is currently the paidBy, we do nothing.
+  // (Note: the current "paidBy" cannot be deselected here.)
   const handleSplitWithToggle = (userName) => {
-    if (userName === paidBy) return; // lock out the current paidBy
+    if (userName === paidBy) return; // lock the paidBy user in the selection
     if (splitWith.includes(userName)) {
-      // Remove the user and clear their split amount.
       setSplitWith(splitWith.filter((u) => u !== userName));
       setSplitAmounts((prev) => {
         const newAmounts = { ...prev };
@@ -121,10 +188,8 @@ const AddExpense = () => {
                     <button
                       type="button"
                       onClick={() => {
-                        // If this user is already the paidBy, do nothing.
                         if (paidBy === user) return;
                         setPaidBy(user);
-                        // Ensure the new paidBy is in splitWith.
                         if (!splitWith.includes(user)) {
                           setSplitWith((prev) => [...prev, user]);
                         }
@@ -171,8 +236,11 @@ const AddExpense = () => {
                   />
                   <label
                     htmlFor={method}
-                    className={`w-full px-2 py-2 text-sm cursor-pointer transition-colors flex items-center justify-center
-                      ${splitMethod === method ? 'bg-blue-500 text-white' : 'bg-white text-gray-700'}`}
+                    className={`w-full px-2 py-2 text-sm cursor-pointer transition-colors flex items-center justify-center ${
+                      splitMethod === method
+                        ? 'bg-blue-500 text-white'
+                        : 'bg-white text-gray-700'
+                    }`}
                   >
                     {method === 'equally' && 'Equally'}
                     {method === 'exact' && 'Exact'}
@@ -224,24 +292,47 @@ const AddExpense = () => {
             </div>
           )}
 
-          {/* Input Boxes for Split With Details */}
-          {splitWith.length > 0 && (
+          {/* Split Amounts Input Fields */}
+          {/* These fields are shown only when a cost has been entered. */}
+          {expenseCost && splitWith.length > 0 && (
             <div className="mt-2 grid gap-2">
               {splitWith.map((user) => (
                 <div key={user} className="grid gap-1">
                   <label className="text-sm font-medium">{user}</label>
-                  <input
-                    type="number"
-                    value={splitAmounts[user] || ''}
-                    onChange={(e) =>
-                      setSplitAmounts((prev) => ({
-                        ...prev,
-                        [user]: e.target.value,
-                      }))
-                    }
-                    placeholder={splitMethod === '%' ? 'Percentage' : 'Amount'}
-                    className="w-full p-2.5 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
+                  {splitMethod === '%' ? (
+                    <div className="relative">
+                      <input
+                        type="number"
+                        value={splitAmounts[user] || ''}
+                        onChange={(e) => {
+                          if (splitMethod !== 'equally') {
+                            handleSplitAmountChange(user, e.target.value);
+                          }
+                        }}
+                        placeholder="Percentage"
+                        className="w-full p-2.5 pr-10 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        readOnly={splitMethod === 'equally'}
+                        max={100}
+                      />
+                      <span className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-500">
+                        %
+                      </span>
+                    </div>
+                  ) : (
+                    <input
+                      type="number"
+                      value={splitAmounts[user] || ''}
+                      onChange={(e) => {
+                        if (splitMethod !== 'equally') {
+                          handleSplitAmountChange(user, e.target.value);
+                        }
+                      }}
+                      placeholder="Amount"
+                      className="w-full p-2.5 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      readOnly={splitMethod === 'equally'}
+                      max={expenseCost}
+                    />
+                  )}
                 </div>
               ))}
             </div>
