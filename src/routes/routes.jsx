@@ -4,7 +4,6 @@ import Chats from '../pages/Chats';
 import ErrorPage from '../pages/ErrorPage';
 import Event from '../pages/Event';
 import EventExpense from '../pages/EventExpense';
-import AddExpense from '../pages/AddExpense';
 import Expenses from '../pages/Expenses';
 import Group from '../pages/Group';
 import Home from '../pages/Home';
@@ -41,11 +40,6 @@ const routes = [
       {
         path: '/eventExpense',
         element: <EventExpense />,
-      },
-      ,
-      {
-        path: '/addExpense',
-        element: <AddExpense />,
       },
       {
         path: '*',
