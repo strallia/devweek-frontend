@@ -93,7 +93,7 @@ const NavigationWrapper = () => {
           image={Home}
           imageAlt="home"
           text="Home"
-          onClick={() => goToPage('/')}
+          onClick={() => goToPage('/home')}
         />
         <IconButton
           image={Wallet}
