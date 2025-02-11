@@ -1,21 +1,25 @@
 import { useState } from 'react';
-import { fetchData } from '../utils/fetchData';
 import { useNavigate } from 'react-router-dom';
+import { loginUser } from '../utils/authentication';
 
 const Login = () => {
   const navigate = useNavigate();
+  const [error, setError] = useState(null);
   const [email, setEmail] = useState(null);
   const [password, setPassword] = useState(null);
 
   const handleLogin = async () => {
-    // authenticate user and get JWT from backend
-    const response = await fetchData('http://127.0.0.1:5000/login', 'POST', {
-      email,
-      password,
-    });
-    localStorage.setItem('token', response.token);
-    navigate('/home');
+    try {
+      await loginUser(email, password);
+      navigate('/home');
+    } catch (err) {
+      setError(err);
+    }
   };
+
+  if (error) {
+    return <p>Error logging in: {error}</p>;
+  }
 
   return (
     <div>
