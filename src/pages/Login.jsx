@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import { fetchData } from '../utils/fetchData';
+import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
+  const navigate = useNavigate();
   const [email, setEmail] = useState(null);
   const [password, setPassword] = useState(null);
 
@@ -12,6 +14,7 @@ const Login = () => {
       password,
     });
     localStorage.setItem('token', response.token);
+    navigate('/home');
   };
 
   return (
