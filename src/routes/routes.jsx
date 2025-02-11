@@ -11,6 +11,7 @@ import Landing from '../pages/Landing';
 import Login from '../pages/Login';
 import Signup from '../pages/Signup';
 import ProtectedRoutes from './ProtectedRoutes';
+import Profile from '../pages/Profile';
 
 const routes = [
   { path: '/', element: <Landing /> },
@@ -29,6 +30,7 @@ const routes = [
           { path: '/chats', element: <Chats /> },
           { path: '/chat', element: <Chat /> },
           { path: '/eventExpense', element: <EventExpense /> },
+          { path: '/profile', element: <Profile /> },
         ],
       },
     ],

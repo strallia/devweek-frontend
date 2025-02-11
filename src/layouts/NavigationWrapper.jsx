@@ -49,7 +49,12 @@ const NavigationWrapper = () => {
   return (
     <div className="grid h-full grid-rows-[60px_1fr_80px]">
       <nav className="flex gap-5 p-2.5 border-b border-gray-300 items-center relative">
-        <IconButton image={User} imageAlt="profile" tailwindStyles="mr-auto" />
+        <IconButton
+          image={User}
+          imageAlt="profile"
+          tailwindStyles="mr-auto"
+          onClick={() => goToPage('/profile')}
+        />
         <IconButton image={Bell} imageAlt="reminders" />
         <IconButton
           image={Writing}
