@@ -13,8 +13,14 @@ export const fetchData = async (endpoint, method, body) => {
       mode: 'cors',
     });
     const data = await res.json();
+
+    if (!res.ok) {
+      throw new Error(data.message);
+    }
+
     return data;
   } catch (err) {
     console.error(`Error fetching at ${endpoint}`, err);
+    throw new Error(err.message);
   }
 };
