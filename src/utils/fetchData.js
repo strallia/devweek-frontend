@@ -15,7 +15,7 @@ export const fetchData = async (endpoint, method, body) => {
     const data = await res.json();
 
     if (!res.ok) {
-      throw new Error(data.message);
+      throw new Error(data.error);
     }
 
     return data;

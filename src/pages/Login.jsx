@@ -13,7 +13,7 @@ const Login = () => {
       await loginUser(email, password);
       navigate('/home');
     } catch (err) {
-      setError(err);
+      setError(err.message);
     }
   };
 

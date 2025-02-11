@@ -23,7 +23,7 @@ export const createUser = async (username, email, password) => {
       password,
     });
   } catch (err) {
-    console.error('Signup failed', err);
+    console.error('Signup failed', err.message);
     throw err;
   }
 };
