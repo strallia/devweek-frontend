@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import ScrollableWrapper from '../layouts/ScrollableWrapper';
 import ProfileImage from './ProfileImage';
-import Writing from '@/assets/icons/writing.svg';
+import Writing from '@/assets/icons/write.svg';
 import { events } from '@/utils/mockData';
 
 const AddExpense = ({ isVisible, setIsVisible }) => {
@@ -9,102 +9,153 @@ const AddExpense = ({ isVisible, setIsVisible }) => {
   const [expenseCost, setExpenseCost] = useState('');
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [paidBy, setPaidBy] = useState(null);
-  const [splitMethod, setSplitMethod] = useState('equally'); // 'equally', 'exact', or '%'
+  const [splitMethod, setSplitMethod] = useState('equally');
   const [splitWith, setSplitWith] = useState([]);
   const [splitAmounts, setSplitAmounts] = useState({});
+  const [isFormValid, setIsFormValid] = useState(false);
 
-  // Reset form fields when a new event is chosen.
-  // Sets paidBy to the first user (if any) and also initializes splitWith with that user.
-  const resetFormFields = (newEvent) => {
-    setExpenseCost('');
-    setSplitMethod('equally');
-    const defaultPaidBy = newEvent?.users[0] || null;
-    setPaidBy(defaultPaidBy);
-    setSplitWith(defaultPaidBy ? [defaultPaidBy] : []);
-    setSplitAmounts({});
+  // Get logged in user (first user in event's users array)
+  const getLoggedInUser = (users) => users[0];
+
+  // Validation for split amounts sum with rounding tolerance
+  const validateSplitAmounts = () => {
+    if (splitMethod === 'equally') return true;
+    
+    const total = Object.values(splitAmounts).reduce((sum, val) => {
+      const num = parseFloat(val) || 0;
+      return sum + num;
+    }, 0);
+
+    if (splitMethod === 'exact') {
+      const cost = parseFloat(expenseCost) || 0;
+      return Math.abs(total - cost) < 0.01;
+    }
+    if (splitMethod === '%') {
+      return Math.abs(total - 100) < 1;
+    }
+    return true;
   };
 
-  // Always ensure that the user selected as "paidBy" is in the "splitWith" list.
+  // Main validation effect
   useEffect(() => {
-    if (paidBy && !splitWith.includes(paidBy)) {
-      setSplitWith((prev) => [...prev, paidBy]);
-    }
-  }, [paidBy, splitWith]);
+    const basicValidation = !!(
+      selectedEvent &&
+      expenseName &&
+      expenseCost &&
+      paidBy &&
+      splitWith.length > 0
+    );
+    
+    const amountsValid = validateSplitAmounts();
+    
+    setIsFormValid(basicValidation && amountsValid);
+  }, [selectedEvent, expenseName, expenseCost, paidBy, splitWith, splitAmounts, splitMethod]);
 
-  // When expenseCost, splitMethod, or splitWith changes, update default split amounts.
+  // Reset all fields
+  const resetAllFormFields = () => {
+    setExpenseName('');
+    setExpenseCost('');
+    setSelectedEvent(null);
+    setPaidBy(null);
+    setSplitWith([]);
+    setSplitAmounts({});
+    setSplitMethod('equally');
+  };
+
+  // Handle event selection
+  const handleEventChange = (newEvent) => {
+    setSelectedEvent(newEvent);
+    if (newEvent?.users?.length) {
+      const loggedInUser = getLoggedInUser(newEvent.users);
+      setPaidBy(loggedInUser);
+      setSplitWith([]);
+    }
+  };
+
+  // Calculate split amounts with percentage distribution
   useEffect(() => {
-    if (!expenseCost) return;
+    if (!expenseCost || !paidBy) return;
+    
+    const allParticipants = [paidBy, ...splitWith];
+    const costValue = parseFloat(expenseCost) || 0;
+
     if (splitMethod === 'equally') {
-      const costValue = parseFloat(expenseCost) || 0;
-      const defaultAmount =
-        splitWith.length > 0 ? (costValue / splitWith.length).toFixed(2) : '0';
+      const amount = allParticipants.length > 0 
+        ? (costValue / allParticipants.length).toFixed(2)
+        : '0';
       const newAmounts = {};
-      splitWith.forEach((user) => {
-        newAmounts[user] = defaultAmount;
+      allParticipants.forEach(user => {
+        newAmounts[user] = amount;
       });
       setSplitAmounts(newAmounts);
     } else if (splitMethod === '%') {
-      // Use toFixed(0) so that 25 is shown instead of 25.00.
-      const defaultPercent =
-        splitWith.length > 0 ? (100 / splitWith.length).toFixed(0) : '0';
+      const totalPercent = 100;
+      const count = allParticipants.length;
+      const baseValue = (totalPercent / count).toFixed(2);
+      const remainder = (totalPercent - (baseValue * count)).toFixed(2);
+
       const newAmounts = {};
-      splitWith.forEach((user) => {
-        newAmounts[user] = defaultPercent;
+      allParticipants.forEach((user, index) => {
+        newAmounts[user] = index === allParticipants.length - 1 
+          ? (parseFloat(baseValue) + parseFloat(remainder)).toFixed(2)
+          : baseValue;
       });
       setSplitAmounts(newAmounts);
     }
-  }, [expenseCost, splitWith, splitMethod]);
+  }, [expenseCost, splitWith, splitMethod, paidBy]);
 
-  // For "exact" method, clear any changes (default to empty fields) when the method changes.
+  // Reset exact amounts when method changes
   useEffect(() => {
     if (splitMethod === 'exact') {
       const newAmounts = {};
-      splitWith.forEach((user) => {
+      const allParticipants = [paidBy, ...splitWith];
+      allParticipants.forEach(user => {
         newAmounts[user] = '';
       });
       setSplitAmounts(newAmounts);
     }
-  }, [splitMethod, splitWith]);
+  }, [splitMethod, splitWith, paidBy]);
 
-  // For "exact" and "%" modes, ensure that entered values don’t make the total exceed:
-  // - The total cost (for "exact")
-  // - 100 (for "%")
+  // Handle amount changes
   const handleSplitAmountChange = (user, newValue) => {
-    // Allow empty value (user clearing the field)
     if (newValue === '') {
       setSplitAmounts((prev) => ({ ...prev, [user]: newValue }));
       return;
     }
+
     const parsedValue = parseFloat(newValue);
+    const allParticipants = [paidBy, ...splitWith];
+
     if (splitMethod === 'exact') {
       const costValue = parseFloat(expenseCost) || 0;
-      if (parsedValue > costValue) return; // individual value must not exceed total cost
+      if (parsedValue > costValue) return;
+      
       let total = parsedValue;
-      splitWith.forEach((u) => {
+      allParticipants.forEach(u => {
         if (u !== user) {
           total += parseFloat(splitAmounts[u]) || 0;
         }
       });
       if (total > costValue) return;
     } else if (splitMethod === '%') {
-      if (parsedValue > 100) return; // individual value must not exceed 100%
+      if (parsedValue > 100) return;
+      
       let total = parsedValue;
-      splitWith.forEach((u) => {
+      allParticipants.forEach(u => {
         if (u !== user) {
           total += parseFloat(splitAmounts[u]) || 0;
         }
       });
       if (total > 100) return;
     }
+    
     setSplitAmounts((prev) => ({ ...prev, [user]: newValue }));
   };
 
-  // Toggle selection for "Split With" users.
-  // (Note: the current "paidBy" cannot be deselected here.)
+  // Toggle split with users
   const handleSplitWithToggle = (userName) => {
-    if (userName === paidBy) return; // lock the paidBy user in the selection
     if (splitWith.includes(userName)) {
-      setSplitWith(splitWith.filter((u) => u !== userName));
+      setSplitWith(prev => prev.filter(u => u !== userName));
       setSplitAmounts((prev) => {
         const newAmounts = { ...prev };
         delete newAmounts[userName];
@@ -115,8 +166,11 @@ const AddExpense = ({ isVisible, setIsVisible }) => {
     }
   };
 
+  // Submit handler
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (!isFormValid) return;
+    
     console.log({
       expenseName,
       expenseCost,
@@ -124,29 +178,30 @@ const AddExpense = ({ isVisible, setIsVisible }) => {
       paidBy,
       splitMethod,
       splitWith,
-      splitAmounts,
+      splitAmounts
     });
+    
+    resetAllFormFields();
   };
 
-  const toggleVisiblity = () => {
+  // Toggle visibility
+  const toggleVisibility = () => {
     setIsVisible((prev) => !prev);
+    if (isVisible) resetAllFormFields();
   };
 
   return (
-    <div
-      className={`absolute w-full bg-gray-50 transition-all duration-500 ease-out rounded-t-2xl border-t-2 border-t-gray-300
-        ${isVisible ? 'top-0 h-full' : 'top-full h-0'}
-      `}
+    <div className={`absolute w-full bg-gray-50 transition-all duration-500 ease-out rounded-t-2xl border-t-2 border-t-gray-300
+      ${isVisible ? 'top-0 h-full' : 'top-full h-0'}`}
     >
-      {isVisible ? (
+      {isVisible && (
         <ScrollableWrapper height="calc(100vh)">
           <div className="p-5 grid gap-6">
-            {/* Header */}
             <div className="flex items-center gap-2">
-              <h1 className="text-2xl font-bold">Expense Name</h1>
+              <h1 className="text-2xl font-bold">Add Expense</h1>
               <img src={Writing} alt="Edit" className="h-6 w-6" />
               <button
-                onClick={toggleVisiblity}
+                onClick={toggleVisibility}
                 className="ml-auto bg-white hover:bg-gray-200 cursor-pointer p-2 rounded-md"
               >
                 Close
@@ -154,6 +209,19 @@ const AddExpense = ({ isVisible, setIsVisible }) => {
             </div>
 
             <form onSubmit={handleSubmit} className="grid gap-6">
+              {/* Expense Name */}
+              <div className="grid gap-2">
+                <label className="text-sm font-medium">Expense Name</label>
+                <input
+                  type="text"
+                  value={expenseName}
+                  onChange={(e) => setExpenseName(e.target.value)}
+                  className="w-full p-2.5 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="Enter expense name"
+                  required
+                />
+              </div>
+
               {/* Event Selection */}
               <div className="grid gap-2">
                 <label className="text-sm font-medium">Select Event</label>
@@ -161,17 +229,15 @@ const AddExpense = ({ isVisible, setIsVisible }) => {
                   value={selectedEvent?.eventName || ''}
                   onChange={(e) => {
                     const selected = events.find(
-                      (event) => event.eventName === e.target.value,
+                      (event) => event.eventName === e.target.value
                     );
-                    setSelectedEvent(selected);
-                    // Reset the form fields after selecting a new event.
-                    resetFormFields(selected);
+                    handleEventChange(selected);
                   }}
                   className="w-full p-2.5 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
                   <option value="">Select an event</option>
-                  {events.map((event, index) => (
-                    <option key={index} value={event.eventName}>
+                  {events.map((event) => (
+                    <option key={event.eventName} value={event.eventName}>
                       {event.eventName}
                     </option>
                   ))}
@@ -193,41 +259,18 @@ const AddExpense = ({ isVisible, setIsVisible }) => {
                 />
               </div>
 
-              {/* Paid By Section */}
-              {selectedEvent && (
+              {/* Paid By Display */}
+              {selectedEvent && paidBy && (
                 <div className="grid gap-2">
                   <label className="text-sm font-medium">Paid By</label>
-                  <div className="flex gap-3 justify-start">
-                    {selectedEvent.users.map((user) => (
-                      <div key={user} className="relative">
-                        <button
-                          type="button"
-                          onClick={() => {
-                            if (paidBy === user) return;
-                            setPaidBy(user);
-                            if (!splitWith.includes(user)) {
-                              setSplitWith((prev) => [...prev, user]);
-                            }
-                          }}
-                        >
-                          <div className="w-8 h-8">
-                            <ProfileImage
-                              text={user.charAt(0)}
-                              className={`w-full h-full rounded-full cursor-pointer transition-all ${
-                                paidBy === user
-                                  ? 'ring-2 ring-blue-500 scale-110 bg-blue-100'
-                                  : 'opacity-75 hover:opacity-100'
-                              }`}
-                            />
-                          </div>
-                        </button>
-                        {paidBy === user && (
-                          <div className="absolute -top-1 -right-1 w-4 h-4 bg-blue-500 rounded-full flex items-center justify-center">
-                            <div className="w-2 h-2 bg-white rounded-full" />
-                          </div>
-                        )}
-                      </div>
-                    ))}
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8">
+                      <ProfileImage
+                        text={paidBy.charAt(0)}
+                        className="w-full h-full rounded-full bg-blue-100"
+                      />
+                    </div>
+                    <span className="text-gray-600">{paidBy}</span>
                   </div>
                 </div>
               )}
@@ -267,63 +310,69 @@ const AddExpense = ({ isVisible, setIsVisible }) => {
               </div>
 
               {/* Split With Section */}
-              {selectedEvent && (
+              {selectedEvent && paidBy && (
                 <div className="grid gap-2">
                   <label className="text-sm font-medium">Split With</label>
                   <div className="flex flex-wrap gap-3">
-                    {selectedEvent.users.map((user) => (
-                      <div key={user} className="relative">
-                        <button
-                          type="button"
-                          onClick={() => handleSplitWithToggle(user)}
-                        >
-                          <div className="w-8 h-8">
-                            <ProfileImage
-                              text={user.charAt(0)}
-                              className={`w-full h-full rounded-full cursor-pointer transition-all ${
-                                splitWith.includes(user)
-                                  ? user === paidBy
-                                    ? 'ring-2 ring-blue-500 scale-110 bg-blue-100'
-                                    : 'ring-2 ring-green-500 scale-110 bg-green-100'
-                                  : 'opacity-50 hover:opacity-75'
-                              }`}
-                            />
-                          </div>
-                        </button>
-                        {splitWith.includes(user) && (
-                          <div className="absolute -top-1 -right-1 w-4 h-4 bg-green-500 rounded-full flex items-center justify-center">
-                            <svg
-                              className="w-2 h-2 text-white"
-                              fill="currentColor"
-                              viewBox="0 0 20 20"
-                            >
-                              <path d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" />
-                            </svg>
-                          </div>
-                        )}
-                      </div>
-                    ))}
+                    {selectedEvent.users
+                      .filter(user => user !== paidBy)
+                      .map((user) => (
+                        <div key={user} className="relative">
+                          <button
+                            type="button"
+                            onClick={() => handleSplitWithToggle(user)}
+                          >
+                            <div className="w-8 h-8">
+                              <ProfileImage
+                                text={user.charAt(0)}
+                                className={`w-full h-full rounded-full cursor-pointer transition-all ${
+                                  splitWith.includes(user)
+                                    ? 'ring-2 ring-green-500 scale-110 bg-green-100'
+                                    : 'opacity-50 hover:opacity-75'
+                                }`}
+                              />
+                            </div>
+                          </button>
+                          {splitWith.includes(user) && (
+                            <div className="absolute -top-1 -right-1 w-4 h-4 bg-green-500 rounded-full flex items-center justify-center">
+                              <svg
+                                className="w-2 h-2 text-white"
+                                fill="currentColor"
+                                viewBox="0 0 20 20"
+                              >
+                                <path d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" />
+                              </svg>
+                            </div>
+                          )}
+                        </div>
+                      ))}
                   </div>
                 </div>
               )}
 
-              {/* Split Amounts Input Fields */}
-              {/* These fields are shown only when a cost has been entered. */}
+              {/* Split Amounts */}
               {expenseCost && splitWith.length > 0 && (
                 <div className="mt-2 grid gap-2">
-                  {splitWith.map((user) => (
+                  {[paidBy, ...splitWith].map((user) => (
                     <div key={user} className="grid gap-1">
-                      <label className="text-sm font-medium">{user}</label>
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm font-medium">
+                          {user}
+                          {user === paidBy && " (paid by)"}
+                        </span>
+                        {splitMethod !== 'equally' && (
+                          <span className="text-xs text-gray-500">
+                            {splitMethod === '%' ? 'Percentage' : 'Amount'}
+                          </span>
+                        )}
+                      </div>
+                      
                       {splitMethod === '%' ? (
                         <div className="relative">
                           <input
                             type="number"
                             value={splitAmounts[user] || ''}
-                            onChange={(e) => {
-                              if (splitMethod !== 'equally') {
-                                handleSplitAmountChange(user, e.target.value);
-                              }
-                            }}
+                            onChange={(e) => handleSplitAmountChange(user, e.target.value)}
                             placeholder="Percentage"
                             className="w-full p-2.5 pr-10 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
                             readOnly={splitMethod === 'equally'}
@@ -337,11 +386,7 @@ const AddExpense = ({ isVisible, setIsVisible }) => {
                         <input
                           type="number"
                           value={splitAmounts[user] || ''}
-                          onChange={(e) => {
-                            if (splitMethod !== 'equally') {
-                              handleSplitAmountChange(user, e.target.value);
-                            }
-                          }}
+                          onChange={(e) => handleSplitAmountChange(user, e.target.value)}
                           placeholder="Amount"
                           className="w-full p-2.5 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
                           readOnly={splitMethod === 'equally'}
@@ -356,36 +401,17 @@ const AddExpense = ({ isVisible, setIsVisible }) => {
               {/* Submit Button */}
               <button
                 type="submit"
-                className="w-full py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 font-medium"
+                className="w-full py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 font-medium disabled:bg-gray-300 disabled:cursor-not-allowed"
+                disabled={!isFormValid}
               >
                 Add Expense
               </button>
             </form>
           </div>
         </ScrollableWrapper>
-      ) : null}
+      )}
     </div>
   );
-
-  // return (
-  //   <div
-  //     className={`absolute w-full bg-red-100 transition-all duration-500 ease-out
-  //       ${isVisible ? 'top-0 h-full' : 'top-full h-0'}
-  //     `}
-  //   >
-  //     {isVisible ? (
-  //       <>
-  //         add expense modal
-  //         <button
-  //           onClick={toggleVisiblity}
-  //           className="absolute right-0 bg-gray-50 cursor-pointer"
-  //         >
-  //           Close modal
-  //         </button>
-  //       </>
-  //     ) : null}
-  //   </div>
-  // );
 };
 
 export default AddExpense;
