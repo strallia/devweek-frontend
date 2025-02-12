@@ -3,6 +3,7 @@
  * @param {String} endpoints
  * @param {String} method - "POST", "GET", "DELETE", or "PUT"
  * @param {Object} body
+ * @returns {Object} response
  */
 export const fetchData = async (endpoint, method, body) => {
   try {

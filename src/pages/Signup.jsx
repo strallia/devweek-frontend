@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { createUser, loginUser } from '../utils/authentication';
+import { fetchData } from '../utils/fetchData';
 
 const Signup = () => {
   const navigate = useNavigate();
@@ -11,8 +11,20 @@ const Signup = () => {
 
   const handleSignup = async () => {
     try {
-      await createUser(username, email, password);
-      await loginUser(email, password);
+      // create user in db
+      await fetchData('http://127.0.0.1:5000/users', 'POST', {
+        username,
+        email,
+        password,
+      });
+
+      // automatically login user
+      const data = await fetchData('http://127.0.0.1:5000/login', 'POST', {
+        email,
+        password,
+      });
+      localStorage.setItem('token', data.token);
+      localStorage.setItem('userId', data.user.id);
       navigate('/home');
     } catch (err) {
       setError(err.message);

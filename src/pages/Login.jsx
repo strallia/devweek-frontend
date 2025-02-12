@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { loginUser } from '../utils/authentication';
+import { fetchData } from '../utils/fetchData';
 
 const Login = () => {
   const navigate = useNavigate();
@@ -10,7 +10,12 @@ const Login = () => {
 
   const handleLogin = async () => {
     try {
-      await loginUser(email, password);
+      const data = await fetchData('http://127.0.0.1:5000/login', 'POST', {
+        email,
+        password,
+      });
+      localStorage.setItem('token', data.token);
+      localStorage.setItem('userId', data.user.id);
       navigate('/home');
     } catch (err) {
       setError(err.message);
