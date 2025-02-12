@@ -18,15 +18,23 @@ React + Vite frontend styled with Tailwind CSS.
    ```
    npm install
    ```
-1. Setup the Backend Server
+1. Setup the Backend Server and Database
 
    Follow the README at https://github.com/strallia/devweek-backend
 
 1. Run the Frontend
+
    ```
    npm run dev
    ```
+
    Go to http://localhost:5173
+
+1. Login to the App Using the Test Account
+   ```
+   email: pegasus@gmail.com
+   password: 123456789
+   ```
 
 ## Project Structure: /src
 
