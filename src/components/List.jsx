@@ -7,11 +7,11 @@ import DefaultImage from './DefaultImage';
 import ProfileImage from './ProfileImage';
 
 const EventItem = ({ item }) => {
-  const { event_icon, group, event_name, date, location } = item;
+  const { event_icon, group, event_name, date, location, id } = item;
   const navigate = useNavigate();
 
   const goToEventPage = () => {
-    navigate('/event', { state: item });
+    navigate('/event', { state: { event_id: id } });
   };
 
   const goToGroupPage = (e) => {
