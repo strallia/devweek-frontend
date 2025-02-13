@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import ScrollableWrapper from '../layouts/ScrollableWrapper';
 import ProfileImage from './ProfileImage';
 import Writing from '@/assets/icons/write.svg';
-import { events } from '@/utils/mockData';
+import { fetchData } from '../utils/fetchData';
 
 const AddExpense = ({ isVisible, setIsVisible }) => {
   const [expenseName, setExpenseName] = useState('');
@@ -13,9 +13,26 @@ const AddExpense = ({ isVisible, setIsVisible }) => {
   const [splitWith, setSplitWith] = useState([]);
   const [splitAmounts, setSplitAmounts] = useState({});
   const [isFormValid, setIsFormValid] = useState(false);
+  const [usersEvents, setUsersEvents] = useState(null);
 
-  // Get logged in user (first user in event's users array)
-  const getLoggedInUser = (users) => users[0];
+  const userId = localStorage.getItem('userId');
+
+  useEffect(() => {
+    const getData = async () => {
+      const data = await fetchData(
+        `http://127.0.0.1:5000/users/${userId}/events`,
+        'GET',
+      );
+      setUsersEvents(data.events);
+    };
+    getData();
+  }, [userId]);
+
+  // Get logged in user
+  const getLoggedInUser = (users) => {
+    const user = users.find((user) => user.id === +userId);
+    return user.username;
+  };
 
   // Validation for split amounts sum with rounding tolerance
   const validateSplitAmounts = () => {
@@ -184,7 +201,7 @@ const AddExpense = ({ isVisible, setIsVisible }) => {
     console.log({
       expenseName,
       expenseCost,
-      selectedEvent: selectedEvent?.eventName,
+      selectedEvent: selectedEvent?.event_name,
       paidBy,
       splitMethod,
       splitWith,
@@ -237,19 +254,19 @@ const AddExpense = ({ isVisible, setIsVisible }) => {
               <div className="grid gap-2">
                 <label className="text-sm font-medium">Select Event</label>
                 <select
-                  value={selectedEvent?.eventName || ''}
+                  value={selectedEvent?.event_name || ''}
                   onChange={(e) => {
-                    const selected = events.find(
-                      (event) => event.eventName === e.target.value,
+                    const selected = usersEvents.find(
+                      (event) => event.event_name === e.target.value,
                     );
                     handleEventChange(selected);
                   }}
                   className="w-full p-2.5 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
                   <option value="">Select an event</option>
-                  {events.map((event) => (
-                    <option key={event.eventName} value={event.eventName}>
-                      {event.eventName}
+                  {usersEvents.map((event) => (
+                    <option key={event.event_name} value={event.event_name}>
+                      {event.event_name}
                     </option>
                   ))}
                 </select>
@@ -326,25 +343,25 @@ const AddExpense = ({ isVisible, setIsVisible }) => {
                   <label className="text-sm font-medium">Split With</label>
                   <div className="flex flex-wrap gap-3">
                     {selectedEvent.users
-                      .filter((user) => user !== paidBy)
+                      .filter((user) => user.username !== paidBy)
                       .map((user) => (
-                        <div key={user} className="relative">
+                        <div key={user.id} className="relative">
                           <button
                             type="button"
-                            onClick={() => handleSplitWithToggle(user)}
+                            onClick={() => handleSplitWithToggle(user.username)}
                           >
                             <div className="w-8 h-8">
                               <ProfileImage
-                                text={user.charAt(0)}
+                                text={user.username.charAt(0)}
                                 className={`w-full h-full rounded-full cursor-pointer transition-all ${
-                                  splitWith.includes(user)
+                                  splitWith.includes(user.username)
                                     ? 'ring-2 ring-green-500 scale-110 bg-green-100'
                                     : 'opacity-50 hover:opacity-75'
                                 }`}
                               />
                             </div>
                           </button>
-                          {splitWith.includes(user) && (
+                          {splitWith.includes(user.username) && (
                             <div className="absolute -top-1 -right-1 w-4 h-4 bg-green-500 rounded-full flex items-center justify-center">
                               <svg
                                 className="w-2 h-2 text-white"
@@ -364,8 +381,8 @@ const AddExpense = ({ isVisible, setIsVisible }) => {
               {/* Split Amounts */}
               {expenseCost && splitWith.length > 0 && (
                 <div className="mt-2 grid gap-2">
-                  {[paidBy, ...splitWith].map((user) => (
-                    <div key={user} className="grid gap-1">
+                  {[paidBy, ...splitWith].map((user, index) => (
+                    <div key={index} className="grid gap-1">
                       <div className="flex items-center justify-between">
                         <span className="text-sm font-medium">
                           {user}
