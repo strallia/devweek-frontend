@@ -20,7 +20,7 @@ const AddExpense = ({ isVisible, setIsVisible }) => {
   // Validation for split amounts sum with rounding tolerance
   const validateSplitAmounts = () => {
     if (splitMethod === 'equally') return true;
-    
+
     const total = Object.values(splitAmounts).reduce((sum, val) => {
       const num = parseFloat(val) || 0;
       return sum + num;
@@ -45,11 +45,19 @@ const AddExpense = ({ isVisible, setIsVisible }) => {
       paidBy &&
       splitWith.length > 0
     );
-    
+
     const amountsValid = validateSplitAmounts();
-    
+
     setIsFormValid(basicValidation && amountsValid);
-  }, [selectedEvent, expenseName, expenseCost, paidBy, splitWith, splitAmounts, splitMethod]);
+  }, [
+    selectedEvent,
+    expenseName,
+    expenseCost,
+    paidBy,
+    splitWith,
+    splitAmounts,
+    splitMethod,
+  ]);
 
   // Reset all fields
   const resetAllFormFields = () => {
@@ -75,16 +83,17 @@ const AddExpense = ({ isVisible, setIsVisible }) => {
   // Calculate split amounts with percentage distribution
   useEffect(() => {
     if (!expenseCost || !paidBy) return;
-    
+
     const allParticipants = [paidBy, ...splitWith];
     const costValue = parseFloat(expenseCost) || 0;
 
     if (splitMethod === 'equally') {
-      const amount = allParticipants.length > 0 
-        ? (costValue / allParticipants.length).toFixed(2)
-        : '0';
+      const amount =
+        allParticipants.length > 0
+          ? (costValue / allParticipants.length).toFixed(2)
+          : '0';
       const newAmounts = {};
-      allParticipants.forEach(user => {
+      allParticipants.forEach((user) => {
         newAmounts[user] = amount;
       });
       setSplitAmounts(newAmounts);
@@ -92,13 +101,14 @@ const AddExpense = ({ isVisible, setIsVisible }) => {
       const totalPercent = 100;
       const count = allParticipants.length;
       const baseValue = (totalPercent / count).toFixed(2);
-      const remainder = (totalPercent - (baseValue * count)).toFixed(2);
+      const remainder = (totalPercent - baseValue * count).toFixed(2);
 
       const newAmounts = {};
       allParticipants.forEach((user, index) => {
-        newAmounts[user] = index === allParticipants.length - 1 
-          ? (parseFloat(baseValue) + parseFloat(remainder)).toFixed(2)
-          : baseValue;
+        newAmounts[user] =
+          index === allParticipants.length - 1
+            ? (parseFloat(baseValue) + parseFloat(remainder)).toFixed(2)
+            : baseValue;
       });
       setSplitAmounts(newAmounts);
     }
@@ -109,7 +119,7 @@ const AddExpense = ({ isVisible, setIsVisible }) => {
     if (splitMethod === 'exact') {
       const newAmounts = {};
       const allParticipants = [paidBy, ...splitWith];
-      allParticipants.forEach(user => {
+      allParticipants.forEach((user) => {
         newAmounts[user] = '';
       });
       setSplitAmounts(newAmounts);
@@ -129,9 +139,9 @@ const AddExpense = ({ isVisible, setIsVisible }) => {
     if (splitMethod === 'exact') {
       const costValue = parseFloat(expenseCost) || 0;
       if (parsedValue > costValue) return;
-      
+
       let total = parsedValue;
-      allParticipants.forEach(u => {
+      allParticipants.forEach((u) => {
         if (u !== user) {
           total += parseFloat(splitAmounts[u]) || 0;
         }
@@ -139,23 +149,23 @@ const AddExpense = ({ isVisible, setIsVisible }) => {
       if (total > costValue) return;
     } else if (splitMethod === '%') {
       if (parsedValue > 100) return;
-      
+
       let total = parsedValue;
-      allParticipants.forEach(u => {
+      allParticipants.forEach((u) => {
         if (u !== user) {
           total += parseFloat(splitAmounts[u]) || 0;
         }
       });
       if (total > 100) return;
     }
-    
+
     setSplitAmounts((prev) => ({ ...prev, [user]: newValue }));
   };
 
   // Toggle split with users
   const handleSplitWithToggle = (userName) => {
     if (splitWith.includes(userName)) {
-      setSplitWith(prev => prev.filter(u => u !== userName));
+      setSplitWith((prev) => prev.filter((u) => u !== userName));
       setSplitAmounts((prev) => {
         const newAmounts = { ...prev };
         delete newAmounts[userName];
@@ -170,7 +180,7 @@ const AddExpense = ({ isVisible, setIsVisible }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!isFormValid) return;
-    
+
     console.log({
       expenseName,
       expenseCost,
@@ -178,9 +188,9 @@ const AddExpense = ({ isVisible, setIsVisible }) => {
       paidBy,
       splitMethod,
       splitWith,
-      splitAmounts
+      splitAmounts,
     });
-    
+
     resetAllFormFields();
   };
 
@@ -191,6 +201,8 @@ const AddExpense = ({ isVisible, setIsVisible }) => {
   };
 
   return (
+    <div
+      className={`absolute w-full bg-gray-50 transition-all duration-500 ease-out rounded-t-2xl border-t-2 border-t-gray-300
     <div className={`absolute w-full bg-gray-50 transition-all duration-500 ease-out rounded-t-2xl border-t-2 border-t-gray-300
       ${isVisible ? 'top-0 h-full' : 'top-full h-0'}`}
     >
@@ -229,7 +241,7 @@ const AddExpense = ({ isVisible, setIsVisible }) => {
                   value={selectedEvent?.eventName || ''}
                   onChange={(e) => {
                     const selected = events.find(
-                      (event) => event.eventName === e.target.value
+                      (event) => event.eventName === e.target.value,
                     );
                     handleEventChange(selected);
                   }}
@@ -315,7 +327,7 @@ const AddExpense = ({ isVisible, setIsVisible }) => {
                   <label className="text-sm font-medium">Split With</label>
                   <div className="flex flex-wrap gap-3">
                     {selectedEvent.users
-                      .filter(user => user !== paidBy)
+                      .filter((user) => user !== paidBy)
                       .map((user) => (
                         <div key={user} className="relative">
                           <button
@@ -358,7 +370,7 @@ const AddExpense = ({ isVisible, setIsVisible }) => {
                       <div className="flex items-center justify-between">
                         <span className="text-sm font-medium">
                           {user}
-                          {user === paidBy && " (paid by)"}
+                          {user === paidBy && ' (paid by)'}
                         </span>
                         {splitMethod !== 'equally' && (
                           <span className="text-xs text-gray-500">
@@ -366,13 +378,15 @@ const AddExpense = ({ isVisible, setIsVisible }) => {
                           </span>
                         )}
                       </div>
-                      
+
                       {splitMethod === '%' ? (
                         <div className="relative">
                           <input
                             type="number"
                             value={splitAmounts[user] || ''}
-                            onChange={(e) => handleSplitAmountChange(user, e.target.value)}
+                            onChange={(e) =>
+                              handleSplitAmountChange(user, e.target.value)
+                            }
                             placeholder="Percentage"
                             className="w-full p-2.5 pr-10 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
                             readOnly={splitMethod === 'equally'}
@@ -386,7 +400,9 @@ const AddExpense = ({ isVisible, setIsVisible }) => {
                         <input
                           type="number"
                           value={splitAmounts[user] || ''}
-                          onChange={(e) => handleSplitAmountChange(user, e.target.value)}
+                          onChange={(e) =>
+                            handleSplitAmountChange(user, e.target.value)
+                          }
                           placeholder="Amount"
                           className="w-full p-2.5 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
                           readOnly={splitMethod === 'equally'}
