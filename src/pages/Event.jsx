@@ -20,7 +20,6 @@ const Event = () => {
   useEffect(() => {
     const getEventData = async () => {
       const data = await fetchData(`http://127.0.0.1:5000/events/${event_id}`);
-      console.log(data);
       setEvent(data);
     };
     getEventData();

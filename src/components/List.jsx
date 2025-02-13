@@ -31,7 +31,7 @@ const EventItem = ({ item }) => {
         <GroupName
           groupName={group.group_name}
           image={group.group_icon}
-          onClick={goToGroupPage}
+          // onClick={goToGroupPage}
         />
         <p className="text-xl">{event_name}</p>
         <DateTime date={date} />
