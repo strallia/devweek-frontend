@@ -26,19 +26,34 @@ const AddGroup = ({ isVisible, setIsVisible }) => {
 
   return (
     <div
-      className={`absolute w-full bg-white transition-all duration-500 ease-out 
-        ${isVisible ? 'top-0 h-full' : 'top-full h-0'} rounded-t-3xl shadow-lg overflow-hidden`}
+      className={`absolute w-full bg-gray-50 transition-all duration-500 ease-out rounded-t-2xl border-t-2 border-t-gray-300
+      ${isVisible ? 'top-0 h-full z-20' : 'top-full h-0'}`}
     >
       {isVisible && (
         <div className="flex flex-col p-6 space-y-4">
-          <h2 className="text-xl font-semibold flex justify-between items-center">
-            Group Name
-            <button className="text-sm text-blue-500">Add Members +</button>
-          </h2>
+          <div className="flex justify-between">
+            <h2 className="text-xl font-semibold flex justify-between items-center">
+              Group Name
+            </h2>
+            <button className="text-sm text-blue-500 ml-auto mr-3">
+              Add Members
+            </button>
+
+            {/* Close Button */}
+            <button
+              onClick={toggleVisibility}
+              className=" bg-white hover:bg-gray-200 cursor-pointer p-2 rounded-md"
+            >
+              Close
+            </button>
+          </div>
 
           {/* Group Name */}
           <div>
-            <label htmlFor="group-name" className="text-sm font-medium text-gray-700">
+            <label
+              htmlFor="group-name"
+              className="text-sm font-medium text-gray-700"
+            >
               Group Name
             </label>
             <input
@@ -53,7 +68,10 @@ const AddGroup = ({ isVisible, setIsVisible }) => {
 
           {/* Group Description */}
           <div>
-            <label htmlFor="group-description" className="text-sm font-medium text-gray-700">
+            <label
+              htmlFor="group-description"
+              className="text-sm font-medium text-gray-700"
+            >
               Description
             </label>
             <input
@@ -68,7 +86,10 @@ const AddGroup = ({ isVisible, setIsVisible }) => {
 
           {/* Location */}
           <div>
-            <label htmlFor="location" className="text-sm font-medium text-gray-700">
+            <label
+              htmlFor="location"
+              className="text-sm font-medium text-gray-700"
+            >
               Location
             </label>
             <input
@@ -83,7 +104,10 @@ const AddGroup = ({ isVisible, setIsVisible }) => {
 
           {/* Visibility */}
           <div>
-            <label htmlFor="visibility" className="text-sm font-medium text-gray-700">
+            <label
+              htmlFor="visibility"
+              className="text-sm font-medium text-gray-700"
+            >
               Visibility
             </label>
             <select
@@ -100,7 +124,10 @@ const AddGroup = ({ isVisible, setIsVisible }) => {
 
           {/* Category */}
           <div>
-            <label htmlFor="category" className="text-sm font-medium text-gray-700">
+            <label
+              htmlFor="category"
+              className="text-sm font-medium text-gray-700"
+            >
               Category
             </label>
             <select
@@ -118,14 +145,9 @@ const AddGroup = ({ isVisible, setIsVisible }) => {
             {/* Create Group Button */}
             <button
               onClick={handleSaveGroup}
-              className="bg-gray-800 text-white p-3 w-full rounded-md mt-4"
+              className="bg-blue-500 text-white p-2 rounded-md w-full"
             >
               Create Group
-            </button>
-
-            {/* Close Button */}
-            <button onClick={toggleVisibility} className="text-sm text-gray-500 mt-4">
-              Close
             </button>
           </div>
         </div>

@@ -62,12 +62,12 @@ const NavigationWrapper = () => {
           onClick={toggleCreateItemDropdown}
         />
         {showCreateItemDropdown ? (
-          <div className="absolute right-3 top-[120%] grid gap-1 z-1">
+          <div className="absolute right-3 top-[120%] grid gap-1.5 z-1">
             <IconButton
               image={AddSubtract}
               imageAlt="add expense"
               text="Add Expense"
-              tailwindStyles="py-[12px] px-[16px]"
+              tailwindStyles="py-[12px] px-[16px] bg-[#D8DBEB] rounded-md"
               onClick={toggleExpenseForm}
               isHorizontal={true}
             />
@@ -75,7 +75,7 @@ const NavigationWrapper = () => {
               image={CalendarLarge}
               imageAlt="create event"
               text="Create Event"
-              tailwindStyles="py-[12px] px-[16px]"
+              tailwindStyles="py-[12px] px-[16px] bg-[#D8DBEB] rounded-md"
               onClick={toggleEventForm}
               isHorizontal={true}
             />
@@ -83,7 +83,7 @@ const NavigationWrapper = () => {
               image={Users}
               imageAlt="create group"
               text="Create Group"
-              tailwindStyles="py-[12px] px-[16px]"
+              tailwindStyles="py-[12px] px-[16px] bg-[#D8DBEB] rounded-md"
               onClick={toggleGroupForm}
               isHorizontal={true}
             />

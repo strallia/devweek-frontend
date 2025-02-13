@@ -40,21 +40,18 @@ const Event = () => {
         <div className="absolute bottom-0 flex justify-between w-full px-3 pb-3">
           <div className="grid gap-1.5">
             <h1 className="font-bold text-2xl">{event.event_name}</h1>
-            <GroupName groupName={event.group_name} />
+            <DateTime date={event.date} containerStyles="mt-auto" />
           </div>
-          <DateTime date={event.date} containerStyles="mt-auto" />
-        </div>
-      </section>
-      <ScrollableWrapper height="calc(100vh - 60px - 208px - 80px)">
-        <section className="grid gap-3 py-2.5 px-5">
           <div className="flex justify-between">
             <div className="grid grid-rows-[auto_auto] grid-cols-[1fr_auto]">
-              <div className="flex">
+              <div className="flex ">
                 {event.users.map((user, index) => (
                   <div
                     key={index}
                     className="w-8 h-8"
-                    style={{ transform: `translateX(${-40 * index}%)` }}
+                    style={{
+                      marginLeft: index === 0 ? 0 : `-12px`,
+                    }}
                   >
                     <ProfileImage
                       image={user.image}
@@ -63,28 +60,37 @@ const Event = () => {
                   </div>
                 ))}
               </div>
-              <button
-                onClick={handleJoinEvent}
-                className="col-start-2 col-end-3 flex justify-center items-center w-[30px] h-[30px]"
-              >
-                <img src={PersonPlus} alt="join event" className="" />
-              </button>
-              <p className="text-xs col-start-1 col-end-3 row-start-2 row-end-3">
+              <p className="text-xs col-start-1 col-end-3 row-start-2 row-end-3 ml-auto text-gray-400">
                 {event.users.length} going
               </p>
             </div>
-            <div className="flex gap-2">
-              <IconButton
-                image={ChatBubble}
-                text="Chat"
-                tailwindStyles="w-[80px] h-[60px] py-1 text-xs bg-gray-100 rounded-md gap-0 hover:bg-gray-300"
-              />
-              <IconButton
-                image={Wallet}
-                text="Expenses"
-                tailwindStyles="w-[80px] h-[60px] py-1 text-xs bg-gray-100 rounded-md hover:bg-gray-300"
-              />
-            </div>
+          </div>
+        </div>
+      </section>
+      <ScrollableWrapper height="calc(100vh - 60px - 208px - 80px)">
+        <section className="grid gap-6 py-3.5 px-5">
+          <div className="pointer-events-none">
+            <GroupName groupName={event.group_name} />
+          </div>
+          <div className="flex gap-2">
+            <IconButton
+              image={ChatBubble}
+              text="Chat"
+              isHorizontal={true}
+              tailwindStyles="w-min h-[40px] py-1 px-8 text-sm bg-[#B4DBFF] rounded-full gap-0 hover:bg-gray-300 gap-1.5 justify-center text-nowrap"
+            />
+            <IconButton
+              image={Wallet}
+              text="Expenses"
+              isHorizontal={true}
+              tailwindStyles="w-min h-[40px] py-1 px-8 text-sm bg-[#B4DBFF] rounded-full gap-0 hover:bg-gray-300 gap-1.5 justify-center text-nowrap"
+            />
+            <IconButton
+              image={PersonPlus}
+              text="Invite"
+              isHorizontal={true}
+              tailwindStyles="w-min h-[40px] py-1 px-8 text-sm bg-[#B4DBFF] rounded-full gap-0 hover:bg-gray-300 gap-1.5 justify-center text-nowrap"
+            />
           </div>
           <div className="border-b border-gray-300 pb-2.5">
             <div className="flex gap-1.5 items-center">

@@ -2,12 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 // Dummy data for testing
-const dummyGroups = [
-  "Group 1",
-  "Group 2",
-  "Group 3",
-  "Group 4",
-];
+const dummyGroups = ['Group 1', 'Group 2', 'Group 3', 'Group 4'];
 
 const AddEvent = ({ isVisible, setIsVisible }) => {
   const [eventName, setEventName] = useState('');
@@ -27,7 +22,7 @@ const AddEvent = ({ isVisible, setIsVisible }) => {
       selectedGroup,
       date,
     };
-    navigate('/event', { state: newEvent });
+    // navigate('/event', { state: newEvent });
     toggleVisibility(); // Closing the modal after saving
   };
 
@@ -37,16 +32,29 @@ const AddEvent = ({ isVisible, setIsVisible }) => {
 
   return (
     <div
-      className={`absolute w-full bg-white transition-all duration-500 ease-out 
-        ${isVisible ? 'top-0 h-full' : 'top-full h-0'} rounded-t-3xl shadow-lg overflow-hidden`}
+      className={`absolute w-full bg-gray-50 transition-all duration-500 ease-out rounded-t-2xl border-t-2 border-t-gray-300
+          ${isVisible ? 'top-0 h-full z-20' : 'top-full h-0'}`}
     >
       {isVisible && (
         <div className="flex flex-col p-6 space-y-4">
-          <h2 className="text-xl font-semibold">Add Event</h2>
+          <div className="flex justify-between">
+            <h2 className="text-xl font-semibold">Add Event</h2>
+
+            {/* Close Button */}
+            <button
+              onClick={toggleVisibility}
+              className="ml-auto bg-white hover:bg-gray-200 cursor-pointer p-2 rounded-md"
+            >
+              Close
+            </button>
+          </div>
 
           {/* Event Name */}
           <div>
-            <label htmlFor="event-name" className="text-sm font-medium text-gray-700">
+            <label
+              htmlFor="event-name"
+              className="text-sm font-medium text-gray-700"
+            >
               Event Name
             </label>
             <input
@@ -61,7 +69,10 @@ const AddEvent = ({ isVisible, setIsVisible }) => {
 
           {/* Description */}
           <div>
-            <label htmlFor="event-description" className="text-sm font-medium text-gray-700">
+            <label
+              htmlFor="event-description"
+              className="text-sm font-medium text-gray-700"
+            >
               Description
             </label>
             <input
@@ -76,7 +87,10 @@ const AddEvent = ({ isVisible, setIsVisible }) => {
 
           {/* Group Selector */}
           <div>
-            <label htmlFor="select-group" className="text-sm font-medium text-gray-700">
+            <label
+              htmlFor="select-group"
+              className="text-sm font-medium text-gray-700"
+            >
               Select Group
             </label>
             <select
@@ -96,7 +110,10 @@ const AddEvent = ({ isVisible, setIsVisible }) => {
 
           {/* Date Picker */}
           <div>
-            <label htmlFor="select-date" className="text-sm font-medium text-gray-700">
+            <label
+              htmlFor="select-date"
+              className="text-sm font-medium text-gray-700"
+            >
               Select Date
             </label>
             <input
@@ -108,18 +125,13 @@ const AddEvent = ({ isVisible, setIsVisible }) => {
             />
           </div>
 
-          <div className="flex justify-between">
+          <div className="flex">
             {/* Save Button */}
             <button
               onClick={handleSaveEvent}
-              className="bg-blue-500 text-white p-2 rounded-md"
+              className="bg-blue-500 text-white p-2 rounded-md w-full"
             >
               Save Event
-            </button>
-
-            {/* Close Button */}
-            <button onClick={toggleVisibility} className="text-sm text-gray-500">
-              Close
             </button>
           </div>
         </div>

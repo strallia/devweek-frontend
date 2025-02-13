@@ -12,7 +12,7 @@ const ProfileImage = ({ image, text }) => {
         <img src={image} />
       ) : (
         <div
-          className="bg-gray-200 h-full w-full font-bold text-2xl text-center content-center rounded-full"
+          className="bg-gray-200 h-full w-full font-bold text-xl text-center content-center rounded-full"
           style={{ backgroundColor: generateRandomPastelColor() }}
         >
           {text}
