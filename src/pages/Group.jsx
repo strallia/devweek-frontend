@@ -46,13 +46,15 @@ const Group = () => {
           <h3 className="font-bold">About Group</h3>
           <p className="text-sm">{description}</p>
         </div>
-        <List
-          title="Upcoming Events"
-          items={events.map((event) => {
-            return { ...event, group: { group_icon, group_name } };
-          })}
-          type="events"
-        />
+        <div className="pointer-events-none">
+          <List
+            title="Upcoming Events"
+            items={events.map((event) => {
+              return { ...event, group: { group_icon, group_name } };
+            })}
+            type="events"
+          />
+        </div>
       </div>
     </ScrollableWrapper>
   );
