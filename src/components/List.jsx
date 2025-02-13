@@ -1,12 +1,13 @@
 import Image from '@/components/Image';
 import { useNavigate } from 'react-router-dom';
 import DateTime from './DateTime';
+import MapPin from '@/assets/icons/map-pin.svg';
 import GroupName from './GroupName';
 import DefaultImage from './DefaultImage';
 import ProfileImage from './ProfileImage';
 
 const EventItem = ({ item }) => {
-  const { eventImage, groupImage, groupName, eventName, date, location } = item;
+  const { event_icon, group, event_name, date, location } = item;
   const navigate = useNavigate();
 
   const goToEventPage = () => {
@@ -24,17 +25,20 @@ const EventItem = ({ item }) => {
       onClick={goToEventPage}
     >
       <div className="h-24 w-24 rounded-md overflow-hidden">
-        <Image url={eventImage} tailwindHeight="h-24" />
+        <Image url={event_icon} tailwindHeight="h-24" />
       </div>
       <div>
         <GroupName
-          groupName={groupName}
-          image={groupImage}
+          groupName={group.group_name}
+          image={group.group_icon}
           onClick={goToGroupPage}
         />
-        <p className="text-xl">{eventName}</p>
+        <p className="text-xl">{event_name}</p>
         <DateTime date={date} />
-        <p className="text-xs">{location}</p>
+        <div className="text-xs flex items-center gap-1.5">
+          <img src={MapPin} alt="" className="w-3" />
+          {location}
+        </div>
       </div>
     </div>
   );

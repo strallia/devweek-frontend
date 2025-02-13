@@ -2,20 +2,25 @@ import ScrollableWrapper from '../layouts/ScrollableWrapper';
 import List from '../components/List';
 import { useEffect, useState } from 'react';
 import { fetchData } from '../utils/fetchData';
-import { events } from '@/utils/mockData';
 
 function Home() {
   const [groups, setGroups] = useState(null);
+  const [events, setEvents] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const userId = localStorage.getItem('userId');
 
   useEffect(() => {
     const getGroups = async () => {
-      const data = await fetchData(
+      const groupsData = await fetchData(
         `http://127.0.0.1:5000/users/${userId}/groups`,
         'GET',
       );
-      setGroups(data.groups);
+      const eventsData = await fetchData(
+        `http://127.0.0.1:5000/users/${userId}/events`,
+        'GET',
+      );
+      setEvents(eventsData.events);
+      setGroups(groupsData.groups);
       setIsLoading(false);
     };
     getGroups();
