@@ -203,8 +203,7 @@ const AddExpense = ({ isVisible, setIsVisible }) => {
   return (
     <div
       className={`absolute w-full bg-gray-50 transition-all duration-500 ease-out rounded-t-2xl border-t-2 border-t-gray-300
-    <div className={`absolute w-full bg-gray-50 transition-all duration-500 ease-out rounded-t-2xl border-t-2 border-t-gray-300
-      ${isVisible ? 'top-0 h-full' : 'top-full h-0'}`}
+      ${isVisible ? 'top-0 h-full z-20' : 'top-full h-0'}`}
     >
       {isVisible && (
         <ScrollableWrapper height="calc(100vh)">
